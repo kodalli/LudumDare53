@@ -85,6 +85,7 @@ public class TroopMovement : MonoBehaviour
 
     private void StartSelection()
     {
+        Debug.Log("LeftClick!");
         m_IsSelectingTroops = true;
         m_StartPosition = MouseWorldPosition;
         selectionArea.gameObject.SetActive(true);

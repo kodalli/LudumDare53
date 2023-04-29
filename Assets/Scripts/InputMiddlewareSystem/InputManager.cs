@@ -11,8 +11,6 @@ namespace TNS.InputMiddlewareSystem
     {
         private InputState inputState;
 
-        [SerializeField] private InputProvider provider;
-
         private void Awake()
         {
             inputState = new InputState();
@@ -44,6 +42,7 @@ namespace TNS.InputMiddlewareSystem
 
         public void OnLeftClick(InputValue value)
         {
+            Debug.Log("LeftClick! thing");
             var leftClickValue = value.Get<float>();
             if (leftClickValue > 0.5f)
             {

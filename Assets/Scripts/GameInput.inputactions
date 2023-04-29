@@ -33,10 +33,19 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Shoot",
-                    "type": "PassThrough",
+                    "name": "LeftClick",
+                    "type": "Button",
                     "id": "26a34133-fd30-42e0-b51f-dc7f5a4398d3",
-                    "expectedControlType": "Double",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "a01c3a8f-36b7-4516-9d18-36101fa02a1e",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press(behavior=2)",
                     "initialStateCheck": true
@@ -246,7 +255,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardOrGamepad",
-                    "action": "Shoot",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -258,6 +267,17 @@
                     "processors": "",
                     "groups": "KeyboardOrGamepad",
                     "action": "Spacebar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d860a89-92fc-4ce7-b839-99706539080f",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardOrGamepad",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
