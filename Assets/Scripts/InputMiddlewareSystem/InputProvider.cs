@@ -27,17 +27,56 @@ namespace TNS.InputMiddlewareSystem
         }
 
         public event Action OnJump;
+        public event Action OnLeftClickPressedAction;
+        public event Action OnLeftClickReleasedAction;
+        public event Action OnRightClickAction;
 
         public void BroadcastJump()
         {
-            if (inputState.CanJump) {
+            if (inputState.CanJump)
+            {
                 OnJump?.Invoke();
             }
-            else {
+            else
+            {
                 Debug.Log("jump disabled");
             }
         }
 
+        public void BroadcastLeftClickPress()
+        {
+            if (inputState.CanSelectTroops)
+            {
+                OnLeftClickPressedAction?.Invoke();
+            }
+            else
+            {
+                Debug.Log("troop selection disabled");
+            }
+        }
+        public void BroadcastLeftClickReleasedPress()
+        {
+            if (inputState.CanSelectTroops)
+            {
+                OnLeftClickReleasedAction?.Invoke();
+            }
+            else
+            {
+                Debug.Log("troop selection disabled");
+            }
+        }
+
+        public void BroadcastRightClick()
+        {
+            if (inputState.CanMoveTroops)
+            {
+                OnRightClickAction?.Invoke();
+            }
+            else
+            {
+                Debug.Log("troop movement disabled");
+            }
+        }
 
         public InputState GetState()
         {

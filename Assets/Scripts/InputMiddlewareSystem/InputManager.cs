@@ -11,8 +11,6 @@ namespace TNS.InputMiddlewareSystem
     {
         private InputState inputState;
 
-        [SerializeField] private InputProvider provider;
-
         private void Awake()
         {
             inputState = new InputState();
@@ -21,13 +19,13 @@ namespace TNS.InputMiddlewareSystem
         public override InputState Process(InputState input)
         {
             input.Copy(inputState);
-            
+
             return input;
         }
 
         public void OnMove(InputValue value)
         {
-            var movementDirection = value.Get<Vector2>();
+            var movementDirection = value.Get<UnityEngine.Vector2>();
 
             inputState.MovementDirection = movementDirection;
         }
@@ -40,6 +38,30 @@ namespace TNS.InputMiddlewareSystem
         public void OnSpacebar(InputValue value)
         {
             BroadcastJump();
+        }
+
+        public void OnLeftClick(InputValue value)
+        {
+            if (value.Get<float>() > 0.5f) {
+                Debug.Log("BroadcastLeftClickPressed");
+                
+                BroadcastLeftClickPressed();
+            }
+            else {
+                Debug.Log("BroadcastLeftClickReleased");
+
+                BroadcastLeftClickReleased();
+            }
+        }
+
+        public void OnRightClick(InputValue value)
+        {
+            BroadcastRightClick();
+        }
+
+        public void OnMouse(InputValue value)
+        {
+            inputState.MouseDirection = value.Get<UnityEngine.Vector2>();
         }
     }
 }
