@@ -11,6 +11,8 @@ namespace TNS.InputMiddlewareSystem
     {
         private InputState inputState;
 
+        [SerializeField] private InputProvider provider;
+
         private void Awake()
         {
             inputState = new InputState();
