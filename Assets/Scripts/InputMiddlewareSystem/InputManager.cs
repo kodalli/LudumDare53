@@ -25,7 +25,7 @@ namespace TNS.InputMiddlewareSystem
 
         public void OnMove(InputValue value)
         {
-            var movementDirection = value.Get<Vector2>();
+            var movementDirection = value.Get<UnityEngine.Vector2>();
 
             inputState.MovementDirection = movementDirection;
         }
@@ -42,26 +42,26 @@ namespace TNS.InputMiddlewareSystem
 
         public void OnLeftClick(InputValue value)
         {
-            Debug.Log("LeftClick! thing");
-            var leftClickValue = value.Get<float>();
-            if (leftClickValue > 0.5f)
-            {
-                BroadCastLeftClickPress();
+            if (value.Get<float>() > 0.5f) {
+                Debug.Log("BroadcastLeftClickPressed");
+                
+                BroadcastLeftClickPressed();
             }
-            else
-            {
-                BroadCastLeftClickRelease();
+            else {
+                Debug.Log("BroadcastLeftClickReleased");
+
+                BroadcastLeftClickReleased();
             }
         }
 
         public void OnRightClick(InputValue value)
         {
-            BroadCastRightClick();
+            BroadcastRightClick();
         }
 
         public void OnMouse(InputValue value)
         {
-            inputState.MouseDirection = value.Get<Vector2>();
+            inputState.MouseDirection = value.Get<UnityEngine.Vector2>();
         }
     }
 }

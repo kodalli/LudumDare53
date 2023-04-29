@@ -5,11 +5,11 @@ namespace TNS.InputMiddlewareSystem
     public class InputState
     {
         public Vector2 MovementDirection;
-        public bool IsCrouching;
-        public bool CanJump;
         public Vector2 MouseDirection;
-        public bool CanSelectTroops;
-        public bool CanMoveTroops;
+        public bool IsCrouching;
+        public bool CanJump = true;
+        public bool CanSelectTroops = true;
+        public bool CanMoveTroops = true;
 
         public void Copy(InputState copy)
         {
@@ -24,11 +24,11 @@ namespace TNS.InputMiddlewareSystem
         public InputState Reset()
         {
             MovementDirection = Vector2.zero;
+            MouseDirection = Vector2.zero;
             IsCrouching = false;
             CanJump = true;
-            MouseDirection = Vector2.zero;
-            CanSelectTroops = false;
-            CanMoveTroops = false;
+            CanSelectTroops = true;
+            CanMoveTroops = true;
 
             return this;
         }

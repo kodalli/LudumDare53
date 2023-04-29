@@ -6,8 +6,7 @@ namespace TNS.InputMiddlewareSystem
     public interface IInputMiddleware
     {
         public event Action OnJump;
-        public event Action OnLeftClickAction;
-        public event Action OnLeftClickReleaseAction;
+        public event Action OnLeftClickPressedAction;
         public event Action OnRightClickAction;
         InputState Process(InputState input);
         bool IsEnabled();
@@ -17,8 +16,8 @@ namespace TNS.InputMiddlewareSystem
     {
         public event Action OnJump;
         public abstract InputState Process(InputState input);
-        public event Action OnLeftClickAction;
-        public event Action OnLeftClickReleaseAction;
+        public event Action OnLeftClickPressedAction;
+        public event Action OnLeftClickReleasedAction;
         public event Action OnRightClickAction;
 
         protected virtual void OnEnable()
@@ -30,17 +29,16 @@ namespace TNS.InputMiddlewareSystem
             OnJump?.Invoke();
         }
 
-        protected void BroadCastLeftClickPress()
+        protected void BroadcastLeftClickPressed()
         {
-            OnLeftClickAction?.Invoke();
+            OnLeftClickPressedAction?.Invoke();
+        }
+        protected void BroadcastLeftClickReleased()
+        {
+            OnLeftClickPressedAction?.Invoke();
         }
 
-        protected void BroadCastLeftClickRelease()
-        {
-            OnLeftClickReleaseAction?.Invoke();
-        }
-
-        protected void BroadCastRightClick()
+        protected void BroadcastRightClick()
         {
             OnRightClickAction?.Invoke();
         }
