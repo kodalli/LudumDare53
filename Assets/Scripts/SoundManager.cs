@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TNS.InputMiddlewareSystem;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -18,7 +20,7 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject); 
         }
     }
-    
+
     public void PlaySound(AudioClip clip) {
        source.PlayOneShot(clip); 
     }
