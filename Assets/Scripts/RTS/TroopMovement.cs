@@ -11,6 +11,7 @@ public class TroopMovement : MonoBehaviour
     // cursor gameObject
     [SerializeField] private Transform rightClick;
     [SerializeField] private InputProvider inputProvider;
+    [SerializeField] private GameObject dogTroop;
     private InputState m_InputState;
     private Vector2 m_MovementDirection;
     private Vector2 m_StartPosition;
@@ -35,6 +36,8 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickPressedAction += StartSelection;
         inputProvider.OnLeftClickReleasedAction += ReleaseSelection;
         inputProvider.OnRightClickAction += HandleTroopMovement;
+        // TODO: change to purchase with treats
+        inputProvider.OnJump += SpawnTroop;
 
         m_SelectedUnitRtsList = new List<IUnitRts>();
         selectionArea.gameObject.SetActive(false);
@@ -47,6 +50,7 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickPressedAction -= StartSelection;
         inputProvider.OnLeftClickReleasedAction -= ReleaseSelection;
         inputProvider.OnRightClickAction -= HandleTroopMovement;
+        inputProvider.OnJump -= SpawnTroop;
     }
 
     private void Update()
@@ -58,6 +62,11 @@ public class TroopMovement : MonoBehaviour
         {
             DrawSelectionArea();
         }
+    }
+
+    private void SpawnTroop()
+    {
+        GameObject.Instantiate(dogTroop);
     }
 
     public void HandleTroopMovement()
@@ -85,7 +94,6 @@ public class TroopMovement : MonoBehaviour
 
     private void StartSelection()
     {
-        Debug.Log("");
         m_IsSelectingTroops = true;
         m_StartPosition = MouseWorldPosition;
         selectionArea.gameObject.SetActive(true);
@@ -115,11 +123,44 @@ public class TroopMovement : MonoBehaviour
 
     private void MoveToSelected()
     {
+        var targetPositionList = GetPositionListAround(MouseWorldPosition, new float[] { 1.5f, 3f, 6f }, new int[] { 5, 10, 20 });
+        // var targetPositionList = GetPositionListAround(MouseWorldPosition, 1f, m_SelectedUnitRtsList.Count);
+        var idx = 0;
         foreach (var units in m_SelectedUnitRtsList)
         {
-            units.MoveToPosition(MouseWorldPosition);
+            // Debug.Log($"index {idx}, target: {targetPositionList[idx]}");
+            units.MoveToPosition(targetPositionList[idx]);
+            idx = (idx + 1) % targetPositionList.Count;
         }
+    }
 
+    private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
+    {
+        var positionList = new List<Vector3>();
+        positionList.Add(startPosition);
+        for (var i = 0; i < ringDistanceArray.Length; ++i)
+        {
+            positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
+        }
+        return positionList;
+    }
+
+    private List<Vector3> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
+    {
+        var positionList = new List<Vector3>();
+        for (var i = 0; i < positionCount; ++i)
+        {
+            var angle = i * (360f / positionCount);
+            var dir = ApplyRotationToVector(new Vector3(1, 0), angle);
+            var position = startPosition + dir * distance;
+            positionList.Add(position);
+        }
+        return positionList;
+    }
+
+    private Vector3 ApplyRotationToVector(Vector3 vec, float angle)
+    {
+        return Quaternion.Euler(0, 0, angle) * vec;
     }
 
 }

@@ -9,11 +9,15 @@ public class DogTroopController : MonoBehaviour, IUnitRts
     [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.3f;
     [SerializeField] private GameObject selectionCircle;
+
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
-    private bool m_ReachedDestination;
-    private Vector3 m_Destination;
+    private static readonly int MoveVelocityX = Animator.StringToHash("MovementVelocityX");
+    private static readonly int MoveVelocityY = Animator.StringToHash("MovementVelocityY");
+    public bool m_ReachedDestination;
+    public Vector3 m_Destination;
     private bool m_FacingRight;
     private readonly Collider2D[] m_CacheArr = new Collider2D[1];
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
@@ -21,6 +25,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts
         anim.SetBool(IsMoving, false);
         m_ReachedDestination = false;
         m_FacingRight = true;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -35,24 +40,29 @@ public class DogTroopController : MonoBehaviour, IUnitRts
         {
             anim.SetBool(IsMoving, false);
         }
+        var normVelocity = rb.velocity.normalized;
+        anim.SetFloat(MoveVelocityX, Mathf.RoundToInt(normVelocity.x));
+        anim.SetFloat(MoveVelocityY, Mathf.RoundToInt(normVelocity.y));
     }
 
     private void Move()
     {
-        var size = Physics2D.OverlapCircleNonAlloc(m_Destination, radius, m_CacheArr);
-        if (size > 0)
+        // var size = Physics2D.OverlapCircleNonAlloc(m_Destination, radius, m_CacheArr);
+        if (Vector3.Distance(transform.position, m_Destination) < 0.005f)
         {
             m_ReachedDestination = true;
+            rb.velocity = Vector2.zero;
         }
 
-        rb.MovePosition(transform.position + m_Destination.normalized * Time.deltaTime * speed);
+        var towards = Vector3.MoveTowards(transform.position, m_Destination, speed * Time.deltaTime);
+        rb.MovePosition(towards);
     }
 
     public void ToggleSelection(bool status)
     {
         if (!status)
         {
-            m_ReachedDestination = true;
+            // m_ReachedDestination = true;
             selectionCircle.SetActive(false);
         }
         else
@@ -82,5 +92,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts
                 break;
         }
     }
+
 }
 
