@@ -21,7 +21,7 @@ namespace TNS.InputMiddlewareSystem
         public override InputState Process(InputState input)
         {
             input.Copy(inputState);
-            
+
             return input;
         }
 
@@ -40,6 +40,29 @@ namespace TNS.InputMiddlewareSystem
         public void OnSpacebar(InputValue value)
         {
             BroadcastJump();
+        }
+
+        public void OnLeftClick(InputValue value)
+        {
+            var leftClickValue = value.Get<float>();
+            if (leftClickValue > 0.5f)
+            {
+                BroadCastLeftClickPress();
+            }
+            else
+            {
+                BroadCastLeftClickRelease();
+            }
+        }
+
+        public void OnRightClick(InputValue value)
+        {
+            BroadCastRightClick();
+        }
+
+        public void OnMouse(InputValue value)
+        {
+            inputState.MouseDirection = value.Get<Vector2>();
         }
     }
 }
