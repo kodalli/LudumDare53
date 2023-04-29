@@ -32,9 +32,9 @@ public class TroopMovement : MonoBehaviour
     private void OnEnable()
     {
         // Actions
-        inputProvider.OnLeftClickAction += StartSelection;
-        inputProvider.OnLeftClickReleaseAction += ReleaseSelection;
-        inputProvider.OnRightClickAction += MoveToSelected;
+        inputProvider.OnLeftClickPressedAction += StartSelection;
+        inputProvider.OnLeftClickReleasedAction += ReleaseSelection;
+        inputProvider.OnRightClickAction += HandleTroopMovement;
 
         m_SelectedUnitRtsList = new List<IUnitRts>();
         selectionArea.gameObject.SetActive(false);
@@ -44,9 +44,9 @@ public class TroopMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        inputProvider.OnLeftClickAction -= StartSelection;
-        inputProvider.OnLeftClickReleaseAction -= ReleaseSelection;
-        inputProvider.OnRightClickAction -= MoveToSelected;
+        inputProvider.OnLeftClickPressedAction -= StartSelection;
+        inputProvider.OnLeftClickReleasedAction -= ReleaseSelection;
+        inputProvider.OnRightClickAction -= HandleTroopMovement;
     }
 
     private void Update()
@@ -85,7 +85,6 @@ public class TroopMovement : MonoBehaviour
 
     private void StartSelection()
     {
-        Debug.Log("LeftClick!");
         m_IsSelectingTroops = true;
         m_StartPosition = MouseWorldPosition;
         selectionArea.gameObject.SetActive(true);

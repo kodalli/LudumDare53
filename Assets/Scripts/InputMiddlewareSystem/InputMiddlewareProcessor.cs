@@ -31,9 +31,8 @@ namespace TNS.InputMiddlewareSystem
             foreach (var middleware in middleware)
             {
                 middleware.OnJump += provider.BroadcastJump;
-                middleware.OnLeftClickAction += provider.BroadcastLeftClickPress;
-                middleware.OnLeftClickReleaseAction += provider.BroadcastLeftClickRelease;
-                middleware.OnJump += provider.BroadcastRightClick;
+                middleware.OnLeftClickPressedAction += provider.BroadcastLeftClickPress;
+                middleware.OnRightClickAction += provider.BroadcastRightClick;
             }
         }
 
