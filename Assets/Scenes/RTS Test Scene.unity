@@ -170,6 +170,7 @@ MonoBehaviour:
   selectionArea: {fileID: 1881620732}
   rightClick: {fileID: 1353167555}
   inputProvider: {fileID: 11400000, guid: 00d1cf63f02ba9d4b8fe833797247014, type: 2}
+  dogTroop: {fileID: 8757482714796508016, guid: 952998bb7dfac33ab852daec63c52fde, type: 3}
 --- !u!1 &699064738
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +224,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -348,7 +349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1353167555}
   - component: {fileID: 1353167554}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,7 +417,7 @@ Transform:
   m_GameObject: {fileID: 1353167553}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
