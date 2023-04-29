@@ -28,7 +28,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!m_ReachedDestination)
         {
