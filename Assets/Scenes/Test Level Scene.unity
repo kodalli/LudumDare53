@@ -31076,33 +31076,6 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
---- !u!1 &597973805 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8757482714796508016, guid: 952998bb7dfac33ab852daec63c52fde, type: 3}
-  m_PrefabInstance: {fileID: 18871454}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &597973812
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597973805}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 1
-  m_Speed: 5
-  m_Acceleration: 100
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &608223050
 GameObject:
   m_ObjectHideFlags: 0
@@ -32572,7 +32545,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 1
 --- !u!4 &1905343122 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8187151454909311505, guid: a009be82845c68951af6a828c72d15d5, type: 3}
@@ -32711,6 +32684,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9794775, guid: 9e9e9b468e7c03d1a9237f1cb66c7775, type: 3}
+      propertyPath: m_ObstacleAvoidanceType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4275102312944782041, guid: 9e9e9b468e7c03d1a9237f1cb66c7775, type: 3}
       propertyPath: escapeLocation
       value: 
