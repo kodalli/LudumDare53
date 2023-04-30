@@ -88,8 +88,14 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         return false;
     }
 
-    private void PickUpPackage()
+    private void PickUpPackage(GameObject obj)
     {
+        // package is a drop, destroy it 
+        if (obj.CompareTag("packageDrop"))
+        {
+            GameObject.Destroy(obj, 0.1f);
+        }
+
         dummyPackage.SetActive(true);
         m_IsHoldingPackage = true;
         anim.runtimeAnimatorController = overrideController;
@@ -113,7 +119,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
             var obj = m_CacheArr[size];
             if (obj.GetComponentInParent<IUnitRts>() == null)
             {
-                PickUpPackage();
+                PickUpPackage(obj.gameObject);
                 break;
             }
         }
@@ -132,7 +138,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     private void Move()
     {
         var distanceToTarget = Vector3.Distance(transform.position, m_Destination);
-        Debug.Log("troop Distance To Target " + distanceToTarget);
+        // Debug.Log("troop Distance To Target " + distanceToTarget);
         if (distanceToTarget < 1f)
         {
             m_ReachedDestination = true;

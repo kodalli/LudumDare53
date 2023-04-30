@@ -7,15 +7,15 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 {
     [SerializeField] private Transform chevalPackageBaseLocation;
     [SerializeField] private Transform escapeLocation;
-    [SerializeField] private float speed;
     [SerializeField] private float searchRadius;
-    [SerializeField] private bool isHoldingPackage;
-    [SerializeField] private Transform currentTarget;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float searchCooldown = 2f;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] GameObject packagePrefabToDrop;
     [SerializeField] float packageStealRange = 1.5f;
+    [SerializeField] private GameObject visiblePackageToCarry;
+    private bool m_IsHoldingPackage;
+    private Transform m_CurrentTarget;
     private Collider2D[] m_CacheArr = new Collider2D[1];
     private float m_SearchCooldownTimer;
     private bool m_FacingRight = true;
@@ -38,7 +38,8 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         m_Agent.updateRotation = false;
 
         m_SearchCooldownTimer = searchCooldown;
-        currentTarget = chevalPackageBaseLocation;
+        m_CurrentTarget = chevalPackageBaseLocation;
+        visiblePackageToCarry.SetActive(false);
     }
 
     private void Update()
@@ -60,14 +61,14 @@ public class PorchPirateController : MonoBehaviour, IDamageable
             return;
         }
 
-        if (isHoldingPackage)
+        if (m_IsHoldingPackage)
         {
             // currentTarget = ClosestTarget();
             m_SearchCooldownTimer = searchCooldown;
         }
         else
         {
-            currentTarget = FindClosestPackage();
+            m_CurrentTarget = FindClosestPackage();
             m_SearchCooldownTimer = searchCooldown;
         }
 
@@ -85,53 +86,59 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void MoveToTarget()
     {
-        m_Agent.SetDestination(currentTarget.position);
+        m_Agent.SetDestination(m_CurrentTarget.position);
 
-        var distanceToTarget = Vector2.Distance(currentTarget.position, transform.position);
+        var distanceToTarget = Vector2.Distance(m_CurrentTarget.position, transform.position);
 
         // Debug.Log("Distance to target: " + distanceToTarget);
 
         // Successfully brought back package to escape location
         if (distanceToTarget < 1f)
         {
-            if (currentTarget == escapeLocation)
+            if (m_CurrentTarget == escapeLocation)
             {
                 Kill();
             }
             else
             {
-                currentTarget = escapeLocation;
-                isHoldingPackage = true;
+                m_CurrentTarget = escapeLocation;
+                m_IsHoldingPackage = true;
             }
         }
 
         // Steal package if in range and don't have a package already
-        if (distanceToTarget < packageStealRange && !isHoldingPackage)
+        if (distanceToTarget < packageStealRange && !m_IsHoldingPackage)
         {
-            var stealable = currentTarget.GetComponentInParent<IStealPackage>();
-            if (stealable != null)
-            {
-                var stolen = stealable.StealPackage();
-                isHoldingPackage = stolen;
-                if (stolen)
-                {
-                    Debug.Log("Package was stolen!");
-                }
-            }
-            currentTarget = escapeLocation;
+            StealPackage();
         }
 
+    }
+
+    private void StealPackage()
+    {
+        var stealable = m_CurrentTarget.GetComponentInParent<IStealPackage>();
+        if (stealable != null)
+        {
+            var stolen = stealable.StealPackage();
+            if (stolen)
+            {
+                Debug.Log("Package was stolen!");
+            }
+        }
+        m_IsHoldingPackage = true;
+        visiblePackageToCarry.SetActive(true);
+        m_CurrentTarget = escapeLocation;
     }
 
     private void Flip()
     {
         switch (m_FacingRight)
         {
-            case true when transform.position.x > currentTarget.position.x:
+            case true when transform.position.x > m_CurrentTarget.position.x:
                 m_FacingRight = false;
                 m_SpriteRenderer.flipX = true;
                 break;
-            case false when transform.position.x < currentTarget.position.x:
+            case false when transform.position.x < m_CurrentTarget.position.x:
                 m_SpriteRenderer.flipX = false;
                 m_FacingRight = true;
                 break;
@@ -145,7 +152,15 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void DropPackage()
     {
-        GameObject.Instantiate(packagePrefabToDrop);
+        if (m_IsHoldingPackage)
+        {
+            GameObject.Instantiate(packagePrefabToDrop, transform.position, Quaternion.identity);
+        }
+    }
+
+    private void DropTreat()
+    {
+        // TODO: impl
     }
 
     public void TakeDamage(float damage)
@@ -154,6 +169,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         if (m_Health <= 0f)
         {
             DropPackage();
+            DropTreat();
             Kill();
         }
     }
