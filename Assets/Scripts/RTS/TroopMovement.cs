@@ -97,7 +97,7 @@ public class TroopMovement : MonoBehaviour
         // Move cursor to click location
         // TODO: do click animation
         rightClick.transform.position = MouseWorldPosition;
-        Debug.Log($"Mouse world position: {MouseWorldPosition}");
+        // Debug.Log($"Mouse world position: {MouseWorldPosition}");
     }
 
     private void DrawSelectionArea()
@@ -130,7 +130,7 @@ public class TroopMovement : MonoBehaviour
             unit.ToggleSelection(false);
         }
 
-        Debug.Log($"{size} selected");
+        // Debug.Log($"{size} selected");
         m_SelectedUnitRtsList.Clear();
         while (--size >= 0)
         {

@@ -2,13 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DogTroopController : MonoBehaviour, IUnitRts
+public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
 {
     [SerializeField] private Animator anim;
+    [SerializeField] private AnimatorOverrideController overrideController;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.3f;
     [SerializeField] private GameObject selectionCircle;
+    [SerializeField] private LayerMask packageLayer;
+    [SerializeField] private LayerMask packageDropOffLayer;
+    // dummy has package layermask for the pirate to collide with
+    [SerializeField] private GameObject dummyPackage;
 
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
     private static readonly int MoveVelocityX = Animator.StringToHash("MovementVelocityX");
@@ -17,7 +22,9 @@ public class DogTroopController : MonoBehaviour, IUnitRts
     public Vector3 m_Destination;
     private bool m_FacingRight;
     private readonly Collider2D[] m_CacheArr = new Collider2D[1];
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer m_SpriteRenderer;
+    private RuntimeAnimatorController m_OriginalController;
+    private bool m_IsHoldingPackage;
 
     private void Start()
     {
@@ -25,11 +32,23 @@ public class DogTroopController : MonoBehaviour, IUnitRts
         anim.SetBool(IsMoving, false);
         m_ReachedDestination = false;
         m_FacingRight = true;
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        m_OriginalController = anim.runtimeAnimatorController;
+        m_IsHoldingPackage = false;
+        dummyPackage.SetActive(false);
     }
 
     private void FixedUpdate()
     {
+        if (!m_IsHoldingPackage)
+        {
+            CheckForPackagePickup();
+        }
+        else
+        {
+            CheckForPackageDropOff();
+        }
+
         if (!m_ReachedDestination)
         {
             Move();
@@ -45,9 +64,50 @@ public class DogTroopController : MonoBehaviour, IUnitRts
         anim.SetFloat(MoveVelocityY, Mathf.RoundToInt(normVelocity.y));
     }
 
+    public bool StealPackage()
+    {
+        if (m_IsHoldingPackage)
+        {
+            DropPackage();
+            return true;
+        }
+        return false;
+    }
+
+    private void PickUpPackage()
+    {
+        dummyPackage.SetActive(true);
+        m_IsHoldingPackage = true;
+        anim.runtimeAnimatorController = overrideController;
+    }
+
+    private void DropPackage()
+    {
+        dummyPackage.SetActive(false);
+        m_IsHoldingPackage = false;
+        anim.runtimeAnimatorController = m_OriginalController;
+    }
+
+    private void CheckForPackagePickup()
+    {
+        var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageLayer);
+        if (size > 0)
+        {
+            PickUpPackage();
+        }
+    }
+
+    private void CheckForPackageDropOff()
+    {
+        var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageDropOffLayer);
+        if (size > 0)
+        {
+            DropPackage();
+        }
+    }
+
     private void Move()
     {
-        // var size = Physics2D.OverlapCircleNonAlloc(m_Destination, radius, m_CacheArr);
         if (Vector3.Distance(transform.position, m_Destination) < 0.005f)
         {
             m_ReachedDestination = true;
@@ -62,7 +122,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts
     {
         if (!status)
         {
-            // m_ReachedDestination = true;
             selectionCircle.SetActive(false);
         }
         else
