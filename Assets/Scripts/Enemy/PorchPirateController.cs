@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PorchPirateController : MonoBehaviour, IDamageable
 {
@@ -17,12 +18,11 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     [SerializeField] LayerMask obstacleLayer;
     [SerializeField] GameObject packagePrefabToDrop;
     [SerializeField] float packageStealRange = 1.5f;
-    [SerializeField] Transform escapePath;
-    private List<Transform> pathToEscape = new List<Transform>();
     private Collider2D[] nonAlloc = new Collider2D[1];
     private float m_SearchCooldownTimer;
     private bool m_FacingRight = true;
     private float m_Health = 100f;
+    private NavMeshAgent agent;
 
     // Logic
     // Search for package
@@ -33,9 +33,17 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+
         m_SearchCooldownTimer = searchCooldown;
         currentTarget = chevalPackageBaseLocation;
-        pathToEscape.AddRange(escapePath.GetComponentsInChildren<Transform>());
+    }
+
+    private void Update()
+    {
+        var rot = transform.rotation;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rot.y, rot.z));
     }
 
     private void FixedUpdate()
@@ -52,7 +60,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
         if (isHoldingPackage)
         {
-            currentTarget = ClosestTarget();
+            // currentTarget = ClosestTarget();
             m_SearchCooldownTimer = searchCooldown;
         }
         else
@@ -73,79 +81,26 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         return chevalPackageBaseLocation;
     }
 
-    private static float[] Arrange(int n, float a, float b)
-    {
-        float[] array = new float[n];
-        float step = (b - a) / (n - 1f);
-        for (int i = 0; i < n; i++)
-        {
-            array[i] = a + i * step;
-        }
-        return array;
-    }
-
-    private Transform ClosestTarget()
-    {
-        float minDistance = Mathf.Infinity;
-        Transform target = escapeLocation;
-        for (var i = 0; i < pathToEscape.Count; ++i)
-        {
-            var point = pathToEscape[i].position;
-            var d1 = Vector2.Distance(point, escapeLocation.position);
-            var d2 = Vector2.Distance(point, transform.position);
-            if (d1 + d2 < minDistance)
-            {
-                target = pathToEscape[i];
-                minDistance = d1 + d2;
-            }
-        }
-        pathToEscape.Remove(target);
-        return target;
-    }
-
     private void MoveToTarget()
     {
-        // Collision Avoidance
-        Vector2 directionToTarget = (currentTarget.position - transform.position).normalized;
-        Vector2 finalDirection = directionToTarget;
-
-        float[] angles = Arrange(8, -70f, 70f);
-        float minHitDistance = Mathf.Infinity;
-        Vector2 closestHitNormal = Vector2.zero;
-
-        foreach (float angle in angles)
-        {
-            Vector2 rayDirection = RotateVector2(directionToTarget, angle);
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, raycastDistance, obstacleLayer);
-
-            if (hit.collider != null)
-            {
-                if (hit.distance < minHitDistance)
-                {
-                    minHitDistance = hit.distance;
-                    closestHitNormal = hit.normal;
-                }
-            }
-
-            Debug.DrawRay(transform.position, rayDirection * raycastDistance, hit.collider == null ? Color.green : Color.red);
-        }
-
-        if (minHitDistance < Mathf.Infinity)
-        {
-            Vector2 slideDirection = new Vector2(closestHitNormal.y, -closestHitNormal.x);
-            finalDirection = slideDirection;
-        }
-
-        finalDirection.Normalize();
-        Vector2 targetPosition = rb.position + finalDirection * speed * Time.fixedDeltaTime;
-        rb.MovePosition(targetPosition);
+        agent.SetDestination(currentTarget.position);
 
         var distanceToTarget = Vector2.Distance(currentTarget.position, transform.position);
 
+        Debug.Log("Distance to target: " + distanceToTarget);
+
         // Successfully brought back package to escape location
-        if (distanceToTarget < 0.1f && currentTarget == escapeLocation)
+        if (distanceToTarget < 1f)
         {
-            Kill();
+            if (currentTarget == escapeLocation)
+            {
+                Kill();
+            }
+            else
+            {
+                currentTarget = escapeLocation;
+                isHoldingPackage = true;
+            }
         }
 
         // Steal package if in range and don't have a package already
@@ -163,14 +118,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
             }
             currentTarget = escapeLocation;
         }
-    }
-    private Vector2 RotateVector2(Vector2 vector, float angle)
-    {
-        float rad = angle * Mathf.Deg2Rad;
-        float sin = Mathf.Sin(rad);
-        float cos = Mathf.Cos(rad);
 
-        return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
     }
 
     private void Flip()
