@@ -16,6 +16,7 @@ public class PorchPirateController : MonoBehaviour
     [SerializeField] LayerMask obstacleLayer;
     private Collider2D[] nonAlloc = new Collider2D[1];
     private float m_SearchCooldownTimer;
+    private bool m_FacingRight = true;
 
     // Logic
     // Search for package
@@ -44,6 +45,7 @@ public class PorchPirateController : MonoBehaviour
         }
 
         MoveToTarget();
+        Flip();
 
         m_SearchCooldownTimer -= Time.fixedDeltaTime;
     }
@@ -113,5 +115,20 @@ public class PorchPirateController : MonoBehaviour
         float cos = Mathf.Cos(rad);
 
         return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
+    }
+
+    private void Flip()
+    {
+        switch (m_FacingRight)
+        {
+            case true when transform.position.x > currentTarget.position.x:
+                transform.Rotate(0f, -180f, 0f);
+                m_FacingRight = false;
+                break;
+            case false when transform.position.x < currentTarget.position.x:
+                transform.Rotate(0f, -180f, 0f);
+                m_FacingRight = true;
+                break;
+        }
     }
 }
