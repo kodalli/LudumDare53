@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class PorchPirateController : MonoBehaviour
+public class PorchPirateController : MonoBehaviour, IDamageable
 {
     [SerializeField] private Transform chevalPackageBaseLocation;
+    [SerializeField] private Transform escapeLocation;
     [SerializeField] private float speed;
     [SerializeField] private float searchRadius;
     [SerializeField] private bool isHoldingPackage;
@@ -14,9 +16,13 @@ public class PorchPirateController : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] float raycastDistance = 2f;
     [SerializeField] LayerMask obstacleLayer;
+    [SerializeField] GameObject packagePrefabToDrop;
+    [SerializeField] float packageStealRange = 1.5f;
     private Collider2D[] nonAlloc = new Collider2D[1];
     private float m_SearchCooldownTimer;
     private bool m_FacingRight = true;
+    private float m_Health = 100f;
+    private NavMeshAgent agent;
 
     // Logic
     // Search for package
@@ -27,27 +33,42 @@ public class PorchPirateController : MonoBehaviour
 
     private void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+
         m_SearchCooldownTimer = searchCooldown;
         currentTarget = chevalPackageBaseLocation;
     }
 
+    private void Update()
+    {
+        var rot = transform.rotation;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rot.y, rot.z));
+    }
+
     private void FixedUpdate()
     {
-        if (isHoldingPackage)
+
+        m_SearchCooldownTimer -= Time.fixedDeltaTime;
+        MoveToTarget();
+        Flip();
+
+        if (m_SearchCooldownTimer < 0)
         {
             return;
         }
 
-        if (m_SearchCooldownTimer < 0 && !isHoldingPackage)
+        if (isHoldingPackage)
+        {
+            // currentTarget = ClosestTarget();
+            m_SearchCooldownTimer = searchCooldown;
+        }
+        else
         {
             currentTarget = FindClosestPackage();
             m_SearchCooldownTimer = searchCooldown;
         }
 
-        MoveToTarget();
-        Flip();
-
-        m_SearchCooldownTimer -= Time.fixedDeltaTime;
     }
 
     private Transform FindClosestPackage()
@@ -62,59 +83,42 @@ public class PorchPirateController : MonoBehaviour
 
     private void MoveToTarget()
     {
-        // Collision Avoidance
-        Vector2 directionToTarget = (currentTarget.position - transform.position).normalized;
-        Vector2 finalDirection = directionToTarget;
-        // if (rb.velocity.magnitude < 0.01f)
-        // {
-        //     finalDirection = -finalDirection;
-        // }
+        agent.SetDestination(currentTarget.position);
 
-        float[] angles = new float[] { -55, -30, -15, 0, 15, 30, 55 };
-        float minHitDistance = Mathf.Infinity;
-        Vector2 closestHitNormal = Vector2.zero;
+        var distanceToTarget = Vector2.Distance(currentTarget.position, transform.position);
 
-        foreach (float angle in angles)
+        Debug.Log("Distance to target: " + distanceToTarget);
+
+        // Successfully brought back package to escape location
+        if (distanceToTarget < 1f)
         {
-            Vector2 rayDirection = RotateVector2(directionToTarget, angle);
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, raycastDistance, obstacleLayer);
-
-            if (hit.collider != null)
+            if (currentTarget == escapeLocation)
             {
-                if (hit.distance < minHitDistance)
+                Kill();
+            }
+            else
+            {
+                currentTarget = escapeLocation;
+                isHoldingPackage = true;
+            }
+        }
+
+        // Steal package if in range and don't have a package already
+        if (distanceToTarget < packageStealRange && !isHoldingPackage)
+        {
+            var stealable = currentTarget.GetComponentInParent<IStealPackage>();
+            if (stealable != null)
+            {
+                var stolen = stealable.StealPackage();
+                isHoldingPackage = stolen;
+                if (stolen)
                 {
-                    minHitDistance = hit.distance;
-                    closestHitNormal = hit.normal;
+                    Debug.Log("Package was stolen!");
                 }
             }
-
-            // Debug lines to visualize rays in the Scene view
-            Debug.DrawRay(transform.position, rayDirection * raycastDistance, hit.collider == null ? Color.green : Color.red);
+            currentTarget = escapeLocation;
         }
 
-        if (minHitDistance < Mathf.Infinity)
-        {
-            Vector2 slideDirection = new Vector2(closestHitNormal.y, -closestHitNormal.x);
-            finalDirection = slideDirection;
-        }
-
-        finalDirection.Normalize();
-        Vector2 targetPosition = rb.position + finalDirection * speed * Time.fixedDeltaTime;
-        rb.MovePosition(targetPosition);
-
-        if (Vector2.Distance(currentTarget.position, transform.position) < 0.05f)
-        {
-            // TODO: collect package and run away
-            isHoldingPackage = true;
-        }
-    }
-    private Vector2 RotateVector2(Vector2 vector, float angle)
-    {
-        float rad = angle * Mathf.Deg2Rad;
-        float sin = Mathf.Sin(rad);
-        float cos = Mathf.Cos(rad);
-
-        return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
     }
 
     private void Flip()
@@ -129,6 +133,26 @@ public class PorchPirateController : MonoBehaviour
                 transform.Rotate(0f, -180f, 0f);
                 m_FacingRight = true;
                 break;
+        }
+    }
+
+    private void Kill()
+    {
+        Destroy(gameObject, 0.1f);
+    }
+
+    private void DropPackage()
+    {
+        GameObject.Instantiate(packagePrefabToDrop);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        m_Health -= damage;
+        if (m_Health <= 0f)
+        {
+            DropPackage();
+            Kill();
         }
     }
 }

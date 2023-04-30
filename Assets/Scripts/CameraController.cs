@@ -28,11 +28,9 @@ public class CameraController : MonoBehaviour
         Vector3 moveDirection = new Vector3(horizontalInput, verticalInput, 0);
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
 
-        // Zoom in and out using the mouse scroll wheel
         float newY = Mathf.Clamp(transform.position.y - (scrollInput * scrollSpeed), minY, maxY);
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
 
-        // Reset camera position with 'R' key
         if (Input.GetKeyDown(KeyCode.R))
         {
             transform.position = _initialPosition;
