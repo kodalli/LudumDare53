@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
 {
     [SerializeField] private Animator anim;
     [SerializeField] private AnimatorOverrideController overrideController;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.3f;
-    [SerializeField] private GameObject selectionCircle;
+    [SerializeField] private SpriteRenderer selectionCircle;
     [SerializeField] private LayerMask packageLayer;
     [SerializeField] private LayerMask packageDropOffLayer;
     // dummy has package layermask for the pirate to collide with
     [SerializeField] private GameObject dummyPackage;
+    [SerializeField] private Color selectionColor;
 
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
     private static readonly int MoveVelocityX = Animator.StringToHash("MovementVelocityX");
@@ -21,10 +22,11 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     public bool m_ReachedDestination;
     public Vector3 m_Destination;
     private bool m_FacingRight;
-    private readonly Collider2D[] m_CacheArr = new Collider2D[1];
+    private readonly Collider2D[] m_CacheArr = new Collider2D[4];
     private SpriteRenderer m_SpriteRenderer;
     private RuntimeAnimatorController m_OriginalController;
     private bool m_IsHoldingPackage;
+    private NavMeshAgent m_Agent;
 
     private void Start()
     {
@@ -36,6 +38,16 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         m_OriginalController = anim.runtimeAnimatorController;
         m_IsHoldingPackage = false;
         dummyPackage.SetActive(false);
+        SetSelectionColor(Color.black);
+        m_Agent = GetComponent<NavMeshAgent>();
+        m_Agent.updateRotation = false;
+    }
+
+    void Update()
+    {
+        // Some reason navmesh forces the sprite rotated 90 on x axis
+        var rot = transform.rotation;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rot.y, rot.z));
     }
 
     private void FixedUpdate()
@@ -52,11 +64,13 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         if (!m_ReachedDestination)
         {
             Move();
-            Flip();
+            Utils.Flip(ref m_FacingRight, transform, m_Destination);
+            m_Agent.isStopped = false;
             anim.SetBool(IsMoving, true);
         }
         else
         {
+            m_Agent.isStopped = true;
             anim.SetBool(IsMoving, false);
         }
         var normVelocity = rb.velocity.normalized;
@@ -74,8 +88,14 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         return false;
     }
 
-    private void PickUpPackage()
+    private void PickUpPackage(GameObject obj)
     {
+        // package is a drop, destroy it 
+        if (obj.CompareTag("packageDrop"))
+        {
+            GameObject.Destroy(obj, 0.1f);
+        }
+
         dummyPackage.SetActive(true);
         m_IsHoldingPackage = true;
         anim.runtimeAnimatorController = overrideController;
@@ -85,15 +105,23 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     {
         dummyPackage.SetActive(false);
         m_IsHoldingPackage = false;
+        m_ReachedDestination = true;
         anim.runtimeAnimatorController = m_OriginalController;
     }
 
     private void CheckForPackagePickup()
     {
+        // Only pickup packages that are not attached to a dog unit
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageLayer);
-        if (size > 0)
+        while (size > 0)
         {
-            PickUpPackage();
+            size--;
+            var obj = m_CacheArr[size];
+            if (obj.GetComponentInParent<IUnitRts>() == null)
+            {
+                PickUpPackage(obj.gameObject);
+                break;
+            }
         }
     }
 
@@ -102,54 +130,44 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageDropOffLayer);
         if (size > 0)
         {
+            Debug.Log("Dropped Package");
             DropPackage();
         }
     }
 
     private void Move()
     {
-        if (Vector3.Distance(transform.position, m_Destination) < 0.005f)
+        var distanceToTarget = Vector3.Distance(transform.position, m_Destination);
+        // Debug.Log("troop Distance To Target " + distanceToTarget);
+        if (distanceToTarget < 1f)
         {
             m_ReachedDestination = true;
-            rb.velocity = Vector2.zero;
         }
+        m_Agent.SetDestination(m_Destination);
+    }
 
-        var towards = Vector3.MoveTowards(transform.position, m_Destination, speed * Time.deltaTime);
-        rb.MovePosition(towards);
+    private void SetSelectionColor(Color color)
+    {
+        color.a = 0.65f;
+        selectionCircle.color = color;
     }
 
     public void ToggleSelection(bool status)
     {
         if (!status)
         {
-            selectionCircle.SetActive(false);
+            SetSelectionColor(Color.black);
         }
         else
         {
-            selectionCircle.SetActive(true);
+            SetSelectionColor(selectionColor);
         }
     }
 
     public void MoveToPosition(Vector2 destination)
     {
         m_ReachedDestination = false;
-        rb.velocity = Vector2.zero;
         m_Destination = destination;
-    }
-
-    private void Flip()
-    {
-        switch (m_FacingRight)
-        {
-            case true when transform.position.x > m_Destination.x:
-                transform.Rotate(0f, -180f, 0f);
-                m_FacingRight = false;
-                break;
-            case false when transform.position.x < m_Destination.x:
-                transform.Rotate(0f, -180f, 0f);
-                m_FacingRight = true;
-                break;
-        }
     }
 
 }

@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8757482714796508014}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1807150443
 BoxCollider2D:
@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 8757482714796508012}
   - component: {fileID: 8757482714796508011}
   - component: {fileID: 6289902948340664610}
+  - component: {fileID: 597973812}
   m_Layer: 6
   m_Name: DogTroop
   m_TagString: Untagged
@@ -92,7 +93,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8347312844935771136}
-  - {fileID: 9056747561378888260}
   - {fileID: 1807150442}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -232,9 +232,8 @@ MonoBehaviour:
   anim: {fileID: 8757482714796508013}
   overrideController: {fileID: 22100000, guid: 74b95299a364e35889e3953599e54179, type: 2}
   rb: {fileID: 8757482714796508011}
-  speed: 5
   radius: 1
-  selectionCircle: {fileID: 8347312844935771142}
+  selectionCircle: {fileID: 8347312844935771143}
   packageLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -242,8 +241,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   dummyPackage: {fileID: 1807150441}
+  selectionColor: {r: 0.1383111, g: 0.6415094, b: 0.08170167, a: 0}
   m_ReachedDestination: 0
   m_Destination: {x: 0, y: 0, z: 0}
+--- !u!195 &597973812
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8757482714796508016}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.4
+  m_Speed: 5.5
+  m_Acceleration: 100
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 0
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 1
 --- !u!1001 &1604450214642508284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -306,86 +328,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
   m_PrefabInstance: {fileID: 1604450214642508284}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8347312844935771142 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7319398561989481978, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
+--- !u!212 &8347312844935771143 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7319398561989481979, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
   m_PrefabInstance: {fileID: 1604450214642508284}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1739442627121311672
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 8757482714796508014}
-    m_Modifications:
-    - target: {fileID: 7319398561989481978, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_Name
-      value: Circle (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481979, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_Color.a
-      value: 0.4627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481979, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_Color.b
-      value: 0.11372549
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481979, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_Color.g
-      value: 0.37615138
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481979, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_Color.r
-      value: 0.81960785
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.438
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
---- !u!4 &9056747561378888260 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7319398561989481980, guid: b1de4194c13c9ad5d93517e3c8f59a0f, type: 3}
-  m_PrefabInstance: {fileID: 1739442627121311672}
   m_PrefabAsset: {fileID: 0}
