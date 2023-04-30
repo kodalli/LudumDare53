@@ -14,7 +14,6 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float searchCooldown = 2f;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] float raycastDistance = 2f;
     [SerializeField] LayerMask obstacleLayer;
     [SerializeField] GameObject packagePrefabToDrop;
     [SerializeField] float packageStealRange = 1.5f;
