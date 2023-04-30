@@ -57,7 +57,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
         m_SearchCooldownTimer -= Time.fixedDeltaTime;
         MoveToTarget();
-        Flip();
+        Utils.Flip(ref m_FacingRight, transform, m_CurrentTarget.position);
 
         if (m_SearchCooldownTimer < 0)
         {
@@ -138,21 +138,6 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         m_IsHoldingPackage = true;
         visiblePackageToCarry.SetActive(true);
         m_CurrentTarget = escapeLocation;
-    }
-
-    private void Flip()
-    {
-        switch (m_FacingRight)
-        {
-            case true when transform.position.x > m_CurrentTarget.position.x:
-                m_FacingRight = false;
-                m_SpriteRenderer.flipX = true;
-                break;
-            case false when transform.position.x < m_CurrentTarget.position.x:
-                m_SpriteRenderer.flipX = false;
-                m_FacingRight = true;
-                break;
-        }
     }
 
     private void Kill()

@@ -11,6 +11,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float attackDamage;
     [SerializeField] private float attackCoolDown;
+    [SerializeField] private ParticleSystem particleSystem;
     private SpriteRenderer m_SpriteRenderer;
     private Animator m_Anim;
     private bool m_FacingRight;
@@ -45,7 +46,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
     void FixedUpdate()
     {
 
-        Flip();
+        Utils.Flip(ref m_FacingRight, transform, m_Destination);
         CheckForEnemy();
         if (!m_ReachedDestination)
         {
@@ -75,6 +76,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         {
             m_Destination = m_CacheArr[0].transform.position;
             m_Anim.SetTrigger(m_AttackTrigger);
+            particleSystem.Play();
         }
         while (size > 0)
         {
@@ -118,19 +120,5 @@ public class BuffDogController : MonoBehaviour, IUnitRts
     {
         m_ReachedDestination = false;
         m_Destination = destination;
-    }
-    private void Flip()
-    {
-        switch (m_FacingRight)
-        {
-            case true when transform.position.x > m_Destination.x:
-                m_FacingRight = false;
-                m_SpriteRenderer.flipX = true;
-                break;
-            case false when transform.position.x < m_Destination.x:
-                m_SpriteRenderer.flipX = false;
-                m_FacingRight = true;
-                break;
-        }
     }
 }

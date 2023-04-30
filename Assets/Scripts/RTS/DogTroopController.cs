@@ -64,7 +64,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         if (!m_ReachedDestination)
         {
             Move();
-            Flip();
+            Utils.Flip(ref m_FacingRight, transform, m_Destination);
             m_Agent.isStopped = false;
             anim.SetBool(IsMoving, true);
         }
@@ -168,21 +168,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     {
         m_ReachedDestination = false;
         m_Destination = destination;
-    }
-
-    private void Flip()
-    {
-        switch (m_FacingRight)
-        {
-            case true when transform.position.x > m_Destination.x:
-                m_FacingRight = false;
-                m_SpriteRenderer.flipX = true;
-                break;
-            case false when transform.position.x < m_Destination.x:
-                m_SpriteRenderer.flipX = false;
-                m_FacingRight = true;
-                break;
-        }
     }
 
 }
