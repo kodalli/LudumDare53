@@ -26603,6 +26603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf18526d9174eb343a9604e849fae665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: 47a7bd10b734b954e95d4dbf166f5578, type: 3}
   mainMenu: {fileID: 2017538181}
   rulesMenu: {fileID: 183700883}
   startButton: {fileID: 1025034790}
@@ -28370,7 +28371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dfa58442e1e1777419a17efad3643a6f, type: 3}
+  m_Sprite: {fileID: 685037944, guid: dfa58442e1e1777419a17efad3643a6f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
