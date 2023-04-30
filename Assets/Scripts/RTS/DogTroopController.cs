@@ -8,7 +8,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     [SerializeField] private Animator anim;
     [SerializeField] private AnimatorOverrideController overrideController;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.3f;
     [SerializeField] private SpriteRenderer selectionCircle;
     [SerializeField] private LayerMask packageLayer;
@@ -23,7 +22,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     public bool m_ReachedDestination;
     public Vector3 m_Destination;
     private bool m_FacingRight;
-    private readonly Collider2D[] m_CacheArr = new Collider2D[1];
+    private readonly Collider2D[] m_CacheArr = new Collider2D[4];
     private SpriteRenderer m_SpriteRenderer;
     private RuntimeAnimatorController m_OriginalController;
     private bool m_IsHoldingPackage;
