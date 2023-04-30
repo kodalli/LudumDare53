@@ -14,6 +14,8 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     [SerializeField] GameObject packagePrefabToDrop;
     [SerializeField] float packageStealRange = 1.5f;
     [SerializeField] private GameObject visiblePackageToCarry;
+    [SerializeField] private Material whiteMaterial;
+    [SerializeField] private float takeDamageTimer;
     private bool m_IsHoldingPackage;
     private Transform m_CurrentTarget;
     private Collider2D[] m_CacheArr = new Collider2D[1];
@@ -22,6 +24,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     private float m_Health = 100f;
     private NavMeshAgent m_Agent;
     private SpriteRenderer m_SpriteRenderer;
+    private Material m_DefaultMaterial;
 
     // Logic
     // Search for package
@@ -36,10 +39,10 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         m_Agent = GetComponent<NavMeshAgent>();
         // Sprite will rotate on z axis of you keep this true
         m_Agent.updateRotation = false;
-
         m_SearchCooldownTimer = searchCooldown;
         m_CurrentTarget = chevalPackageBaseLocation;
         visiblePackageToCarry.SetActive(false);
+        m_DefaultMaterial = m_SpriteRenderer.material;
     }
 
     private void Update()
@@ -72,6 +75,13 @@ public class PorchPirateController : MonoBehaviour, IDamageable
             m_SearchCooldownTimer = searchCooldown;
         }
 
+    }
+
+    private IEnumerator TakeDamageFlash()
+    {
+        m_SpriteRenderer.material = whiteMaterial;
+        yield return new WaitForSeconds(takeDamageTimer);
+        m_SpriteRenderer.material = m_DefaultMaterial;
     }
 
     private Transform FindClosestPackage()
@@ -165,6 +175,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
+        StartCoroutine(TakeDamageFlash());
         m_Health -= damage;
         if (m_Health <= 0f)
         {
