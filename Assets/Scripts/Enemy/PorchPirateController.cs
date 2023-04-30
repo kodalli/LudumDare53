@@ -89,7 +89,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
         var distanceToTarget = Vector2.Distance(currentTarget.position, transform.position);
 
-        Debug.Log("Distance to target: " + distanceToTarget);
+        // Debug.Log("Distance to target: " + distanceToTarget);
 
         // Successfully brought back package to escape location
         if (distanceToTarget < 1f)

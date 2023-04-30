@@ -93,7 +93,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         }
         m_Agent.SetDestination(m_Destination);
 
-        Debug.Log("Distance to target " + distanceToTarget);
+        // Debug.Log("Distance to target " + distanceToTarget);
     }
 
     private void SetSelectionColor(Color color)

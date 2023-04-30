@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
 {
@@ -26,6 +27,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     private SpriteRenderer m_SpriteRenderer;
     private RuntimeAnimatorController m_OriginalController;
     private bool m_IsHoldingPackage;
+    private NavMeshAgent m_Agent;
 
     private void Start()
     {
@@ -38,6 +40,15 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         m_IsHoldingPackage = false;
         dummyPackage.SetActive(false);
         SetSelectionColor(Color.black);
+        m_Agent = GetComponent<NavMeshAgent>();
+        m_Agent.updateRotation = false;
+    }
+
+    void Update()
+    {
+        // Some reason navmesh forces the sprite rotated 90 on x axis
+        var rot = transform.rotation;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rot.y, rot.z));
     }
 
     private void FixedUpdate()
@@ -55,10 +66,12 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         {
             Move();
             Flip();
+            m_Agent.isStopped = false;
             anim.SetBool(IsMoving, true);
         }
         else
         {
+            m_Agent.isStopped = true;
             anim.SetBool(IsMoving, false);
         }
         var normVelocity = rb.velocity.normalized;
@@ -119,14 +132,13 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
 
     private void Move()
     {
-        if (Vector3.Distance(transform.position, m_Destination) < 0.005f)
+        var distanceToTarget = Vector3.Distance(transform.position, m_Destination);
+        Debug.Log("troop Distance To Target " + distanceToTarget);
+        if (distanceToTarget < 1f)
         {
             m_ReachedDestination = true;
-            rb.velocity = Vector2.zero;
         }
-
-        var towards = Vector3.MoveTowards(transform.position, m_Destination, speed * Time.deltaTime);
-        rb.MovePosition(towards);
+        m_Agent.SetDestination(m_Destination);
     }
 
     private void SetSelectionColor(Color color)
@@ -150,7 +162,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     public void MoveToPosition(Vector2 destination)
     {
         m_ReachedDestination = false;
-        rb.velocity = Vector2.zero;
         m_Destination = destination;
     }
 
@@ -159,11 +170,11 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         switch (m_FacingRight)
         {
             case true when transform.position.x > m_Destination.x:
-                transform.Rotate(0f, -180f, 0f);
                 m_FacingRight = false;
+                m_SpriteRenderer.flipX = true;
                 break;
             case false when transform.position.x < m_Destination.x:
-                transform.Rotate(0f, -180f, 0f);
+                m_SpriteRenderer.flipX = false;
                 m_FacingRight = true;
                 break;
         }
