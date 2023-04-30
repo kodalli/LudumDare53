@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject HUDCanvas;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text levelsText;
-    [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text dogTreatsText;
     [SerializeField] private Button exitGameButton;
 
     private void Awake()
