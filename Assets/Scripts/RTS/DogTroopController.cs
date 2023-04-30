@@ -9,11 +9,12 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.3f;
-    [SerializeField] private GameObject selectionCircle;
+    [SerializeField] private SpriteRenderer selectionCircle;
     [SerializeField] private LayerMask packageLayer;
     [SerializeField] private LayerMask packageDropOffLayer;
     // dummy has package layermask for the pirate to collide with
     [SerializeField] private GameObject dummyPackage;
+    [SerializeField] private Color selectionColor;
 
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
     private static readonly int MoveVelocityX = Animator.StringToHash("MovementVelocityX");
@@ -36,6 +37,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         m_OriginalController = anim.runtimeAnimatorController;
         m_IsHoldingPackage = false;
         dummyPackage.SetActive(false);
+        SetSelectionColor(Color.black);
     }
 
     private void FixedUpdate()
@@ -85,15 +87,23 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     {
         dummyPackage.SetActive(false);
         m_IsHoldingPackage = false;
+        m_ReachedDestination = true;
         anim.runtimeAnimatorController = m_OriginalController;
     }
 
     private void CheckForPackagePickup()
     {
+        // Only pickup packages that are not attached to a dog unit
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageLayer);
-        if (size > 0)
+        while (size > 0)
         {
-            PickUpPackage();
+            size--;
+            var obj = m_CacheArr[size];
+            if (obj.GetComponentInParent<IUnitRts>() == null)
+            {
+                PickUpPackage();
+                break;
+            }
         }
     }
 
@@ -102,6 +112,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageDropOffLayer);
         if (size > 0)
         {
+            Debug.Log("Dropped Package");
             DropPackage();
         }
     }
@@ -118,15 +129,21 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         rb.MovePosition(towards);
     }
 
+    private void SetSelectionColor(Color color)
+    {
+        color.a = 0.65f;
+        selectionCircle.color = color;
+    }
+
     public void ToggleSelection(bool status)
     {
         if (!status)
         {
-            selectionCircle.SetActive(false);
+            SetSelectionColor(Color.black);
         }
         else
         {
-            selectionCircle.SetActive(true);
+            SetSelectionColor(selectionColor);
         }
     }
 

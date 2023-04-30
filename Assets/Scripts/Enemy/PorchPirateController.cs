@@ -14,14 +14,14 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float searchCooldown = 2f;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] LayerMask obstacleLayer;
     [SerializeField] GameObject packagePrefabToDrop;
     [SerializeField] float packageStealRange = 1.5f;
-    private Collider2D[] nonAlloc = new Collider2D[1];
+    private Collider2D[] m_CacheArr = new Collider2D[1];
     private float m_SearchCooldownTimer;
     private bool m_FacingRight = true;
     private float m_Health = 100f;
-    private NavMeshAgent agent;
+    private NavMeshAgent m_Agent;
+    private SpriteRenderer m_SpriteRenderer;
 
     // Logic
     // Search for package
@@ -32,9 +32,10 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        m_Agent = GetComponent<NavMeshAgent>();
         // Sprite will rotate on z axis of you keep this true
-        agent.updateRotation = false;
+        m_Agent.updateRotation = false;
 
         m_SearchCooldownTimer = searchCooldown;
         currentTarget = chevalPackageBaseLocation;
@@ -74,17 +75,17 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private Transform FindClosestPackage()
     {
-        var size = Physics2D.OverlapCircleNonAlloc(transform.position, searchRadius, nonAlloc, targetLayerMask);
+        var size = Physics2D.OverlapCircleNonAlloc(transform.position, searchRadius, m_CacheArr, targetLayerMask);
         if (size > 0)
         {
-            return nonAlloc[0].transform;
+            return m_CacheArr[0].transform;
         }
         return chevalPackageBaseLocation;
     }
 
     private void MoveToTarget()
     {
-        agent.SetDestination(currentTarget.position);
+        m_Agent.SetDestination(currentTarget.position);
 
         var distanceToTarget = Vector2.Distance(currentTarget.position, transform.position);
 
@@ -127,11 +128,11 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         switch (m_FacingRight)
         {
             case true when transform.position.x > currentTarget.position.x:
-                transform.Rotate(0f, -180f, 0f);
                 m_FacingRight = false;
+                m_SpriteRenderer.flipX = true;
                 break;
             case false when transform.position.x < currentTarget.position.x:
-                transform.Rotate(0f, -180f, 0f);
+                m_SpriteRenderer.flipX = false;
                 m_FacingRight = true;
                 break;
         }
