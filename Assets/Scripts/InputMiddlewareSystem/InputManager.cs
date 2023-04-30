@@ -43,13 +43,9 @@ namespace TNS.InputMiddlewareSystem
         public void OnLeftClick(InputValue value)
         {
             if (value.Get<float>() > 0.5f) {
-                Debug.Log("BroadcastLeftClickPressed");
-                
                 BroadcastLeftClickPressed();
             }
             else {
-                Debug.Log("BroadcastLeftClickReleased");
-
                 BroadcastLeftClickReleased();
             }
         }
