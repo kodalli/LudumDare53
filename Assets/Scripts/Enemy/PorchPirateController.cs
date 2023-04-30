@@ -34,6 +34,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        // Sprite will rotate on z axis of you keep this true
         agent.updateRotation = false;
 
         m_SearchCooldownTimer = searchCooldown;
@@ -42,6 +43,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        // Some reason navmesh forces the sprite rotated 90 on x axis
         var rot = transform.rotation;
         transform.rotation = Quaternion.Euler(new Vector3(0, rot.y, rot.z));
     }

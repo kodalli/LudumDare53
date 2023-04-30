@@ -1,0 +1,19 @@
+pirate guy:
+- he can track packages that are on a layer, has overlap circle detection
+- targets cheval base location by default, if it finds any close packages goes after those instead
+- steals package then runs away to escape location then destroyed
+
+dog:
+- pick up package
+- drop package 
+- pirate can steal from dog, changes anim controller back to default
+
+next step:
+- [DONE] if dog reaches house drop off package, stop moving
+- [INP] lighning strike when delivers package, turns into buff dog like chess, Lightning strike Blue, MagicBuffBlue
+- [INP] ups truck ultimate, after deliver N number packages, nav mesh tracks all pirates for N seconds 
+- [INP] use ToonFightAction for buff dog, or SoftFightAction
+- [INP] shop buy dogs, currency dog treats
+- [INP] waves for levels (single map, just more enemies), delivery N packages to win before all your packages get stolen
+
+
