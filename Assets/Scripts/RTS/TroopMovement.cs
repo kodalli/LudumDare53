@@ -12,6 +12,7 @@ public class TroopMovement : MonoBehaviour
     [SerializeField] private Transform rightClick;
     [SerializeField] private InputProvider inputProvider;
     [SerializeField] private GameObject dogTroop;
+    [SerializeField] private int balance = 100; //currency total
     private InputState m_InputState;
     private Vector2 m_MovementDirection;
     private Vector2 m_StartPosition;
@@ -19,6 +20,7 @@ public class TroopMovement : MonoBehaviour
     private readonly Collider2D[] m_Collider2Ds = new Collider2D[20];
     private Camera m_Camera;
     private bool m_IsSelectingTroops;
+    private bool holdshift;
 
     private Vector2 MouseWorldPosition
     {
@@ -55,7 +57,8 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickReleasedAction += ReleaseSelection;
         inputProvider.OnRightClickAction += HandleTroopMovement;
         // TODO: change to purchase with treats
-        inputProvider.OnJump += SpawnTroop;
+        inputProvider.OnJump += purchaseUnit;
+
 
         m_SelectedUnitRtsList = new List<IUnitRts>();
         selectionArea.gameObject.SetActive(false);
@@ -69,11 +72,12 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickPressedAction -= StartSelection;
         inputProvider.OnLeftClickReleasedAction -= ReleaseSelection;
         inputProvider.OnRightClickAction -= HandleTroopMovement;
-        inputProvider.OnJump -= SpawnTroop;
+        inputProvider.OnJump -= purchaseUnit;
     }
 
     private void Update()
     {
+        holdshift = Input.GetKey(KeyCode.LeftShift);
         m_InputState = inputProvider.GetState();
 
         // Only draw area if initial left click pressed to start selection
@@ -82,6 +86,13 @@ public class TroopMovement : MonoBehaviour
             DrawSelectionArea();
         }
         rightClick.transform.position = inputProvider.GetState().MouseDirection;
+    }
+
+    private void purchaseUnit () {
+        if(balance - 100 >= 0){
+            balance -= 100;
+            SpawnTroop();
+        }
     }
 
     private void SpawnTroop()
@@ -125,13 +136,19 @@ public class TroopMovement : MonoBehaviour
         selectionArea.gameObject.SetActive(false);
         var size = Physics2D.OverlapAreaNonAlloc(m_StartPosition, MouseWorldPosition, m_Collider2Ds);
         // Deselect
-        foreach (var unit in m_SelectedUnitRtsList)
+        Debug.Log($"{size} selected");
+
+        if (!holdshift)
         {
-            unit.ToggleSelection(false);
+            foreach (var unit in m_SelectedUnitRtsList)
+            {
+                unit.ToggleSelection(false);    
+            }
+            m_SelectedUnitRtsList.Clear();
         }
+        
 
         // Debug.Log($"{size} selected");
-        m_SelectedUnitRtsList.Clear();
         while (--size >= 0)
         {
             var unitRts = m_Collider2Ds[size].GetComponent<IUnitRts>();
