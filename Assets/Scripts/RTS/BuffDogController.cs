@@ -74,7 +74,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, attackRadius, m_CacheArr, enemyLayer);
         if (size > 0)
         {
-            m_Destination = m_CacheArr[0].transform.position;
+            MoveToPosition(m_CacheArr[0].transform.position);
             m_Anim.SetTrigger(m_AttackTrigger);
             particleSystem.Play();
         }

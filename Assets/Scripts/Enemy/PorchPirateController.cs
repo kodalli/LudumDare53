@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class PorchPirateController : MonoBehaviour, IDamageable
 {
     public Transform chevalPackageBaseLocation;
-    [SerializeField] private Transform escapeLocation;
+    public Transform escapeLocation;
     [SerializeField] private float searchRadius;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float searchCooldown = 2f;
@@ -96,6 +96,12 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void MoveToTarget()
     {
+        // bug deleting target too early
+        if (m_CurrentTarget == null)
+        {
+            m_CurrentTarget = escapeLocation;
+        }
+
         m_Agent.SetDestination(m_CurrentTarget.position);
 
         var distanceToTarget = Vector2.Distance(m_CurrentTarget.position, transform.position);
