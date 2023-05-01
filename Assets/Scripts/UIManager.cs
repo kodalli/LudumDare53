@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Button showMenuButton;
     [SerializeField] private Button exitGameButton;
-    
+
     [SerializeField] private Button buffDogButton;
     [SerializeField] private Button littleDogButton;
 
@@ -47,6 +47,11 @@ public class UIManager : MonoBehaviour
     public AudioClip clickSound;
     public AudioClip BuffBuySound;
     public AudioClip smallDogBuySound;
+
+    public Button returnButtonLoss;
+    public Button returnButtonWin;
+    public GameObject gameOverCanvas;
+    public GameObject wonGameCanvas;
 
     // @formatter:on
 
@@ -60,6 +65,8 @@ public class UIManager : MonoBehaviour
         hudCanvas.SetActive(false);
         exitScreenCanvas.SetActive(false);
         resumeButton.gameObject.SetActive(false);
+        wonGameCanvas.gameObject.SetActive(false);
+        gameOverCanvas.gameObject.SetActive(false);
 
         startButton.onClick.AddListener(PlayClickSound);
         rulesButton.onClick.AddListener(PlayClickSound);
@@ -71,6 +78,8 @@ public class UIManager : MonoBehaviour
         resumeButton.onClick.AddListener(PlayClickSound);
         littleDogButton.onClick.AddListener(PuppyDogSound);
         buffDogButton.onClick.AddListener(BuffDogSound);
+        returnButtonLoss.onClick.AddListener(RestartGame);
+        returnButtonWin.onClick.AddListener(RestartGame);
     }
 
     private void PlayClickSound()
@@ -96,7 +105,7 @@ public class UIManager : MonoBehaviour
         confirmButton.onClick.AddListener(ShowMenu);
         backButton.onClick.AddListener(StartGame);
         resumeButton.onClick.AddListener(ResumeGame);
-        
+
         buffDogButton.onClick.AddListener(PurchaseBuffDog);
         littleDogButton.onClick.AddListener(PurchaseLittleDog);
     }
@@ -113,11 +122,11 @@ public class UIManager : MonoBehaviour
         confirmButton.onClick.RemoveListener(ShowMenu);
         backButton.onClick.RemoveListener(StartGame);
         resumeButton.onClick.RemoveListener(ResumeGame);
-        
+
         buffDogButton.onClick.RemoveListener(PurchaseBuffDog);
         littleDogButton.onClick.RemoveListener(PurchaseLittleDog);
     }
-    
+
     private void PurchaseBuffDog()
     {
         App.GameManager.OnPurchaseBuffDogEvent();
@@ -126,7 +135,7 @@ public class UIManager : MonoBehaviour
     {
         App.GameManager.OnPurchaseLittleDogEvent();
     }
-    
+
     private void Update()
     {
         var gm = App.GameManager;
@@ -135,7 +144,41 @@ public class UIManager : MonoBehaviour
         wavePackageDeliveryGoalText.text = $"Delivery Goal: {gm.WavePackageGoal}";
         waveText.text = $"Wave: {gm.CurrentWave}";
         deliveredText.text = $"Delivered: {gm.PackagesDelivered}";
+        if (gm.PackagesLeft <= 0 && gm.WavePackageGoal > gm.PackagesDelivered)
+        {
+            GameOver();
+        }
+        if (gm.CurrentWave > 5)
+        {
+            WinGame();
+        }
     }
+
+    private void GameOver()
+    {
+        mainMenuCanvas.SetActive(false);
+        hudCanvas.SetActive(false);
+        exitScreenCanvas.SetActive(false);
+        gameOverCanvas.SetActive(true);
+        inputActionAsset.Disable();
+        Time.timeScale = 1;
+    }
+
+    private void WinGame()
+    {
+        mainMenuCanvas.SetActive(false);
+        hudCanvas.SetActive(false);
+        exitScreenCanvas.SetActive(false);
+        wonGameCanvas.SetActive(true);
+        inputActionAsset.Disable();
+        Time.timeScale = 1;
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     private void ResumeGame()
     {
         mainMenuCanvas.SetActive(false);

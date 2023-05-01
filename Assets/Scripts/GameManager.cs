@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public event Action PurchaseBuffDogEvent;
     public event Action PurchaseLittleDogEvent;
-    
+
     public int PackagesDelivered { get; private set; }
     public int PackagesLeft { get; private set; }
     public int WavePackageGoal { get; private set; }
