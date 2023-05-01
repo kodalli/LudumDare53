@@ -45,6 +45,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button backButton;
     private bool hasStarted = false;
     public AudioClip clickSound;
+    public AudioClip BuffBuySound;
+    public AudioClip smallDogBuySound;
 
     // @formatter:on
 
@@ -67,11 +69,21 @@ public class UIManager : MonoBehaviour
         confirmButton.onClick.AddListener(PlayClickSound);
         backButton.onClick.AddListener(PlayClickSound);
         resumeButton.onClick.AddListener(PlayClickSound);
+        littleDogButton.onClick.AddListener(PuppyDogSound);
+        buffDogButton.onClick.AddListener(BuffDogSound);
     }
 
     private void PlayClickSound()
     {
         SoundManager.Instance.PlaySound(clickSound);
+    }
+    private void BuffDogSound()
+    {
+        SoundManager.Instance.PlaySound(BuffBuySound);
+    }
+    private void PuppyDogSound()
+    {
+        SoundManager.Instance.PlaySound(smallDogBuySound);
     }
 
     private void OnEnable()

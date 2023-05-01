@@ -28,7 +28,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
     private bool m_IsHoldingPackage;
     private NavMeshAgent m_Agent;
     public AudioClip deliverSound;
-    public AudioClip movepupSound;
    
 
     private void Start()
@@ -150,7 +149,6 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
             m_ReachedDestination = true;
         }
         m_Agent.SetDestination(m_Destination);
-        SoundManager.Instance.PlaySound(movepupSound);
     }
 
     private void SetSelectionColor(Color color)
