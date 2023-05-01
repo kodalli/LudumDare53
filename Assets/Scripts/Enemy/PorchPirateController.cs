@@ -112,7 +112,9 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         if (distanceToTarget < 1f)
         {
             if (m_CurrentTarget == escapeLocation)
-            {
+            {   
+                App.GameManager.Health -= 1;
+                Debug.Log("Package Gone!");
                 Kill();
             }
             else
