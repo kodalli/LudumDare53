@@ -131,7 +131,7 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
         if (size > 0)
         {
             Debug.Log("Dropped Package");
-            App.GameManager.dogTreatsCount++;
+            App.GameManager.PackagesDelivered++;
             DropPackage();
         }
     }

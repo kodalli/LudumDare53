@@ -136,7 +136,7 @@ public class TroopMovement : MonoBehaviour
         selectionArea.gameObject.SetActive(false);
         var size = Physics2D.OverlapAreaNonAlloc(m_StartPosition, MouseWorldPosition, m_Collider2Ds);
         // Deselect
-        Debug.Log($"{size} selected");
+        //Debug.Log($"{size} selected");
 
         if (!holdshift)
         {

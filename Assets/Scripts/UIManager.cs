@@ -78,7 +78,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        dogTreatsText.text = $"x{App.GameManager.dogTreatsCount}";
+        dogTreatsText.text = $"x{App.GameManager.PackagesDelivered}";
     }
 
     private void StartGame()
