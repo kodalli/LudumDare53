@@ -22,6 +22,8 @@ public class BuffDogController : MonoBehaviour, IUnitRts
     private readonly int m_IsMoving = Animator.StringToHash("IsMoving");
     private readonly Collider2D[] m_CacheArr = new Collider2D[5];
     private float m_AttackTimer;
+    private float m_SeekCoolDown = 0;
+    private Transform m_CurrentTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +50,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
 
         Utils.Flip(ref m_FacingRight, transform, m_Destination);
         CheckForEnemy();
+        SeekEnemy();
         if (!m_ReachedDestination)
         {
             m_Agent.isStopped = false;
@@ -58,6 +61,26 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         {
             m_Anim.SetBool(m_IsMoving, false);
             m_Agent.isStopped = true;
+        }
+    }
+
+    private void SeekEnemy()
+    {
+        if (m_CurrentTarget != null)
+        {
+            m_Destination = m_CurrentTarget.position;
+        }
+
+        if (m_SeekCoolDown < 5f)
+        {
+            m_SeekCoolDown += Time.fixedDeltaTime;
+            return;
+        }
+        m_SeekCoolDown = 0f;
+        var size = Physics2D.OverlapCircleNonAlloc(transform.position, attackRadius * 3f, m_CacheArr, enemyLayer);
+        if (size > 0)
+        {
+            MoveToPosition(m_CacheArr[0].transform);
         }
     }
 
@@ -74,7 +97,6 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, attackRadius, m_CacheArr, enemyLayer);
         if (size > 0)
         {
-            MoveToPosition(m_CacheArr[0].transform.position);
             m_Anim.SetTrigger(m_AttackTrigger);
             particleSystem.Play();
         }
@@ -116,9 +138,16 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         }
     }
 
+    private void MoveToPosition(Transform target)
+    {
+        m_ReachedDestination = false;
+        m_CurrentTarget = target;
+    }
+
     public void MoveToPosition(Vector2 destination)
     {
         m_ReachedDestination = false;
         m_Destination = destination;
+        m_CurrentTarget = null;
     }
 }

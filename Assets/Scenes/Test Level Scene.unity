@@ -66743,10 +66743,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BuffDog
       objectReference: {fileID: 0}
-    - target: {fileID: 8669389355411722837, guid: c2bd0bd125cd6092bb168a421c7a10dc, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8669389355411722839, guid: c2bd0bd125cd6092bb168a421c7a10dc, type: 3}
       propertyPath: m_RootOrder
       value: 9
