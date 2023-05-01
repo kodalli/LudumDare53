@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button backButton;
     private bool hasStarted = false;
+    public AudioClip clickSound;
 
     // @formatter:on
 
@@ -54,6 +55,20 @@ public class UIManager : MonoBehaviour
         hudCanvas.SetActive(false);
         exitScreenCanvas.SetActive(false);
         resumeButton.gameObject.SetActive(false);
+
+        startButton.onClick.AddListener(PlayClickSound);
+        rulesButton.onClick.AddListener(PlayClickSound);
+        exitAppButton.onClick.AddListener(PlayClickSound);
+        showMenuButton.onClick.AddListener(PlayClickSound);
+        exitGameButton.onClick.AddListener(PlayClickSound);
+        confirmButton.onClick.AddListener(PlayClickSound);
+        backButton.onClick.AddListener(PlayClickSound);
+        resumeButton.onClick.AddListener(PlayClickSound);
+    }
+
+    private void PlayClickSound()
+    {
+        SoundManager.Instance.PlaySound(clickSound);
     }
 
     private void OnEnable()
@@ -61,10 +76,8 @@ public class UIManager : MonoBehaviour
         startButton.onClick.AddListener(StartGame);
         rulesButton.onClick.AddListener(OnRules);
         exitAppButton.onClick.AddListener(OnExitApplication);
-
         showMenuButton.onClick.AddListener(ShowMenu);
         exitGameButton.onClick.AddListener(ShowExitScreen);
-
         confirmButton.onClick.AddListener(ShowMenu);
         backButton.onClick.AddListener(StartGame);
         resumeButton.onClick.AddListener(ResumeGame);
