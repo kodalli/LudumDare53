@@ -66793,6 +66793,7 @@ MonoBehaviour:
   rightClick: {fileID: 1905343122}
   inputProvider: {fileID: 11400000, guid: 00d1cf63f02ba9d4b8fe833797247014, type: 2}
   dogTroop: {fileID: 8757482714796508016, guid: 952998bb7dfac33ab852daec63c52fde, type: 3}
+  balance: 100
 --- !u!1 &6229330630299183095
 GameObject:
   m_ObjectHideFlags: 0
