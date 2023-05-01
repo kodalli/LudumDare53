@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public event Action PurchaseBuffDogEvent;
+    public event Action PurchaseLittleDogEvent;
+    
     public int PackagesDelivered { get; private set; }
     public int PackagesLeft { get; private set; }
     public int WavePackageGoal { get; private set; }
@@ -68,5 +71,14 @@ public class GameManager : MonoBehaviour
         }
         DogTreats -= treatsCount;
         return true;
+    }
+
+    public void OnPurchaseBuffDogEvent()
+    {
+        PurchaseBuffDogEvent?.Invoke();
+    }
+    public void OnPurchaseLittleDogEvent()
+    {
+        PurchaseLittleDogEvent?.Invoke();
     }
 }

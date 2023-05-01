@@ -35,6 +35,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Button showMenuButton;
     [SerializeField] private Button exitGameButton;
+    
+    [SerializeField] private Button buffDogButton;
+    [SerializeField] private Button littleDogButton;
 
     [Header("ExitScreen")]
     [SerializeField] private GameObject exitScreenCanvas;
@@ -81,6 +84,9 @@ public class UIManager : MonoBehaviour
         confirmButton.onClick.AddListener(ShowMenu);
         backButton.onClick.AddListener(StartGame);
         resumeButton.onClick.AddListener(ResumeGame);
+        
+        buffDogButton.onClick.AddListener(PurchaseBuffDog);
+        littleDogButton.onClick.AddListener(PurchaseLittleDog);
     }
 
     private void OnDisable()
@@ -95,8 +101,20 @@ public class UIManager : MonoBehaviour
         confirmButton.onClick.RemoveListener(ShowMenu);
         backButton.onClick.RemoveListener(StartGame);
         resumeButton.onClick.RemoveListener(ResumeGame);
+        
+        buffDogButton.onClick.RemoveListener(PurchaseBuffDog);
+        littleDogButton.onClick.RemoveListener(PurchaseLittleDog);
     }
-
+    
+    private void PurchaseBuffDog()
+    {
+        App.GameManager.OnPurchaseBuffDogEvent();
+    }
+    private void PurchaseLittleDog()
+    {
+        App.GameManager.OnPurchaseLittleDogEvent();
+    }
+    
     private void Update()
     {
         var gm = App.GameManager;
