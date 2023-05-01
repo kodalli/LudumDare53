@@ -271,8 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0562792422e4cf265b311393049b62c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chevalPackageBaseLocation: {fileID: 0}
-  escapeLocation: {fileID: 0}
+  chevalPackageBaseLocation: {fileID: 1139810137635458211, guid: 5e685280896876fca8b5c54e3528f8b5, type: 3}
+  escapeLocation: {fileID: 2777012210232076015, guid: c58800a78c01ca22587cbae81eee8044, type: 3}
   searchRadius: 10
   targetLayerMask:
     serializedVersion: 2
@@ -352,7 +352,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
+  m_ObstacleAvoidanceType: 2
 --- !u!95 &9794781
 Animator:
   serializedVersion: 5
