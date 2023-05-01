@@ -51,6 +51,8 @@ public class UIManager : MonoBehaviour
         startButton.onClick.RemoveListener(OnStart);
         rulesButton.onClick.RemoveListener(OnStart);
         exitAppButton.onClick.RemoveListener(OnExitApplication);
+        
+        exitGameButton.onClick.RemoveListener(OnExitGame);
     }
 
     private void OnStart()
