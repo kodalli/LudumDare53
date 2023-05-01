@@ -24,6 +24,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
     private float m_AttackTimer;
     private float m_SeekCoolDown = 0;
     private Transform m_CurrentTarget;
+    public AudioClip punchSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -99,6 +100,7 @@ public class BuffDogController : MonoBehaviour, IUnitRts
         {
             m_Anim.SetTrigger(m_AttackTrigger);
             particleSystem.Play();
+            SoundManager.Instance.PlaySound(punchSound);
         }
         while (size > 0)
         {

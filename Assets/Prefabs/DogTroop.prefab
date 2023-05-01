@@ -244,6 +244,7 @@ MonoBehaviour:
   selectionColor: {r: 0.1383111, g: 0.6415094, b: 0.08170167, a: 0}
   m_ReachedDestination: 0
   m_Destination: {x: 0, y: 0, z: 0}
+  deliverSound: {fileID: 8300000, guid: e2b33dfb0109bf040bcf29b7eac33d86, type: 3}
 --- !u!195 &597973812
 NavMeshAgent:
   m_ObjectHideFlags: 0

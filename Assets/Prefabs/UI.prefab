@@ -3043,6 +3043,7 @@ MonoBehaviour:
   startButton: {fileID: 3819106011730918354}
   rulesButton: {fileID: 3819106010786512155}
   exitAppButton: {fileID: 3819106010842164705}
+  resumeButton: {fileID: 1868357456}
   hudCanvas: {fileID: 3819106011634646312}
   packagesLeftText: {fileID: 3819106010930851304}
   wavePackageDeliveryGoalText: {fileID: 1963456917}
@@ -3054,6 +3055,7 @@ MonoBehaviour:
   exitScreenCanvas: {fileID: 1946893386}
   confirmButton: {fileID: 882289352}
   backButton: {fileID: 1090739554}
+  clickSound: {fileID: 8300000, guid: 7f82c2c5c05f427ba88b72f3f2b8416a, type: 3}
 --- !u!1 &3819106011313858314
 GameObject:
   m_ObjectHideFlags: 0
