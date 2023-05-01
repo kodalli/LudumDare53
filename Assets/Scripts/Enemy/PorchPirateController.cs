@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class PorchPirateController : MonoBehaviour, IDamageable
 {
-    [SerializeField] private Transform chevalPackageBaseLocation;
+    public Transform chevalPackageBaseLocation;
     [SerializeField] private Transform escapeLocation;
     [SerializeField] private float searchRadius;
     [SerializeField] private LayerMask targetLayerMask;
@@ -135,6 +135,14 @@ public class PorchPirateController : MonoBehaviour, IDamageable
                 Debug.Log("Package was stolen!");
             }
         }
+
+        // Standalone package was picked so destroy it after picking it up
+        var unit = m_CurrentTarget.GetComponentInParent<IUnitRts>();
+        if (unit == null && !m_CurrentTarget.CompareTag("dontDestroy"))
+        {
+            GameObject.Destroy(m_CurrentTarget.gameObject, 0.2f);
+        }
+
         m_IsHoldingPackage = true;
         visiblePackageToCarry.SetActive(true);
         m_CurrentTarget = escapeLocation;
