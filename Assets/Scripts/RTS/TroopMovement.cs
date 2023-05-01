@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using TNS.InputMiddlewareSystem;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class TroopMovement : MonoBehaviour
 {
     // rectangle drawn to show selection area
     [SerializeField] private Transform selectionArea;
+
     // cursor gameObject
     [SerializeField] private Transform rightClick;
     [SerializeField] private InputProvider inputProvider;
-    [SerializeField] private GameObject dogTroop;
+    [SerializeField] private GameObject littleDogTroop;
+    [SerializeField] private GameObject buffDogTroop;
     [SerializeField] private int balance = 100; //currency total
     private InputState m_InputState;
     private Vector2 m_MovementDirection;
@@ -34,22 +37,21 @@ public class TroopMovement : MonoBehaviour
     public static Texture2D SpriteToTexture2D(GameObject obj)
     {
         var sprite = obj.GetComponent<SpriteRenderer>().sprite;
-        if (sprite.rect.width != sprite.texture.width || sprite.rect.height != sprite.texture.height)
-        {
+        if (sprite.rect.width != sprite.texture.width || sprite.rect.height != sprite.texture.height) {
             Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
             Color[] newColors = sprite.texture.GetPixels((int)sprite.textureRect.x,
-                                                          (int)sprite.textureRect.y,
-                                                          (int)sprite.textureRect.width,
-                                                          (int)sprite.textureRect.height);
+                (int)sprite.textureRect.y,
+                (int)sprite.textureRect.width,
+                (int)sprite.textureRect.height);
             newText.SetPixels(newColors);
             newText.Apply();
             return newText;
         }
-        else
-        {
+        else {
             return sprite.texture;
         }
     }
+
     private void OnEnable()
     {
         // Actions
@@ -57,7 +59,26 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickReleasedAction += ReleaseSelection;
         inputProvider.OnRightClickAction += HandleTroopMovement;
         // TODO: change to purchase with treats
-        inputProvider.OnJump += purchaseUnit;
+        // inputProvider.OnJump += purchaseUnit;
+        App.GameManager.PurchaseLittleDogEvent += () =>
+        {
+            if (App.GameManager.ConsumeDogTreats(2)) {
+                SpawnTroop(littleDogTroop);
+            }
+            else {
+                Debug.Log("Not Enough DogTreats !!! Need at least 2");
+            }
+        };
+        App.GameManager.PurchaseBuffDogEvent  += () =>
+        {
+            if (App.GameManager.ConsumeDogTreats(5)) {
+                SpawnTroop(buffDogTroop);
+            }
+            else
+            {
+                Debug.Log("Not Enough DogTreats !!! Need at least 5");
+            }
+        };;
 
 
         m_SelectedUnitRtsList = new List<IUnitRts>();
@@ -72,7 +93,7 @@ public class TroopMovement : MonoBehaviour
         inputProvider.OnLeftClickPressedAction -= StartSelection;
         inputProvider.OnLeftClickReleasedAction -= ReleaseSelection;
         inputProvider.OnRightClickAction -= HandleTroopMovement;
-        inputProvider.OnJump -= purchaseUnit;
+        // inputProvider.OnJump -= purchaseUnit;
     }
 
     private void Update()
@@ -81,23 +102,24 @@ public class TroopMovement : MonoBehaviour
         m_InputState = inputProvider.GetState();
 
         // Only draw area if initial left click pressed to start selection
-        if (m_IsSelectingTroops)
-        {
+        if (m_IsSelectingTroops) {
             DrawSelectionArea();
         }
+
         rightClick.transform.position = inputProvider.GetState().MouseDirection;
     }
 
-    private void purchaseUnit () {
-        if(balance - 100 >= 0){
-            balance -= 100;
-            SpawnTroop();
-        }
-    }
-
-    private void SpawnTroop()
+    // private void PurchaseUnit()
+    // {
+    //     if (balance - 100 >= 0) {
+    //         balance -= 100;
+    //         SpawnTroop(troop);
+    //     }
+    // }
+    //
+    private void SpawnTroop(GameObject troop)
     {
-        GameObject.Instantiate(dogTroop);
+        GameObject.Instantiate(troop);
     }
 
     public void HandleTroopMovement()
@@ -138,19 +160,17 @@ public class TroopMovement : MonoBehaviour
         // Deselect
         //Debug.Log($"{size} selected");
 
-        if (!holdshift)
-        {
-            foreach (var unit in m_SelectedUnitRtsList)
-            {
-                unit.ToggleSelection(false);    
+        if (!holdshift) {
+            foreach (var unit in m_SelectedUnitRtsList) {
+                unit.ToggleSelection(false);
             }
+
             m_SelectedUnitRtsList.Clear();
         }
-        
+
 
         // Debug.Log($"{size} selected");
-        while (--size >= 0)
-        {
+        while (--size >= 0) {
             var unitRts = m_Collider2Ds[size].GetComponent<IUnitRts>();
             if (unitRts == null) continue;
             unitRts.ToggleSelection(true);
@@ -160,38 +180,40 @@ public class TroopMovement : MonoBehaviour
 
     private void MoveToSelected()
     {
-        var targetPositionList = GetPositionListAround(MouseWorldPosition, new float[] { 1.5f, 3f, 6f }, new int[] { 5, 10, 20 });
+        var targetPositionList =
+            GetPositionListAround(MouseWorldPosition, new float[] { 1.5f, 3f, 6f }, new int[] { 5, 10, 20 });
         // var targetPositionList = GetPositionListAround(MouseWorldPosition, 1f, m_SelectedUnitRtsList.Count);
         var idx = 0;
-        foreach (var units in m_SelectedUnitRtsList)
-        {
+        foreach (var units in m_SelectedUnitRtsList) {
             // Debug.Log($"index {idx}, target: {targetPositionList[idx]}");
             units.MoveToPosition(targetPositionList[idx]);
             idx = (idx + 1) % targetPositionList.Count;
         }
     }
 
-    private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
+    private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray,
+        int[] ringPositionCountArray)
     {
         var positionList = new List<Vector3>();
         positionList.Add(startPosition);
-        for (var i = 0; i < ringDistanceArray.Length; ++i)
-        {
-            positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
+        for (var i = 0; i < ringDistanceArray.Length; ++i) {
+            positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i],
+                ringPositionCountArray[i]));
         }
+
         return positionList;
     }
 
     private List<Vector3> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
     {
         var positionList = new List<Vector3>();
-        for (var i = 0; i < positionCount; ++i)
-        {
+        for (var i = 0; i < positionCount; ++i) {
             var angle = i * (360f / positionCount);
             var dir = ApplyRotationToVector(new Vector3(1, 0), angle);
             var position = startPosition + dir * distance;
             positionList.Add(position);
         }
+
         return positionList;
     }
 
@@ -199,5 +221,4 @@ public class TroopMovement : MonoBehaviour
     {
         return Quaternion.Euler(0, 0, angle) * vec;
     }
-
 }
