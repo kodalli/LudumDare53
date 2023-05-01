@@ -12,7 +12,6 @@ public class TroopMovement : MonoBehaviour
     [SerializeField] private Transform rightClick;
     [SerializeField] private InputProvider inputProvider;
     [SerializeField] private GameObject dogTroop;
-    [SerializeField] private int balance = 100; //currency total
     private InputState m_InputState;
     private Vector2 m_MovementDirection;
     private Vector2 m_StartPosition;
@@ -89,8 +88,8 @@ public class TroopMovement : MonoBehaviour
     }
 
     private void purchaseUnit () {
-        if(balance - 100 >= 0){
-            balance -= 100;
+        if(App.GameManager.DogTreats - 2 >= 0){
+            App.GameManager.ConsumeDogTreats(2);
             SpawnTroop();
         }
     }
