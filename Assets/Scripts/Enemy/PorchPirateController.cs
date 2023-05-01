@@ -112,9 +112,9 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         if (distanceToTarget < 1f)
         {
             if (m_CurrentTarget == escapeLocation)
-            {   
-                App.GameManager.Health -= 1;
+            {
                 Debug.Log("Package Gone!");
+                App.GameManager.PackageStolen();
                 Kill();
             }
             else
@@ -169,19 +169,14 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         }
     }
 
-    private void DropTreat()
-    {
-        // TODO: impl
-    }
-
     public void TakeDamage(float damage)
     {
         StartCoroutine(TakeDamageFlash());
         m_Health -= damage;
         if (m_Health <= 0f)
         {
+            App.GameManager.AddDogTreat();
             DropPackage();
-            DropTreat();
             Kill();
         }
     }

@@ -127,11 +127,12 @@ public class DogTroopController : MonoBehaviour, IUnitRts, IStealPackage
 
     private void CheckForPackageDropOff()
     {
+        // This layer is the house 
         var size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, m_CacheArr, packageDropOffLayer);
         if (size > 0)
         {
-            Debug.Log("Dropped Package");
-            App.GameManager.PackagesDelivered++;
+            Debug.Log("Dropped Package at House");
+            App.GameManager.DeliverPackage();
             DropPackage();
         }
     }

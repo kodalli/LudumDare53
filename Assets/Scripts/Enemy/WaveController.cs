@@ -23,7 +23,7 @@ public class WaveController : MonoBehaviour
 
     private List<Spawner> allSpawners = new List<Spawner>();
 
-    private List<int> wavePackageCountGoals = new List<int>() { 0, 1, 2, 4, 5, 6 };
+    public List<int> wavePackageCountGoals = new List<int>() { 0, 1, 2, 4, 5, 6 };
 
     void Start()
     {
@@ -35,37 +35,38 @@ public class WaveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(App.GameManager.PackagesDelivered == wavePackageCountGoals[App.GameManager.CurrentWave])
+        var wave = App.GameManager.CurrentWave;
+        if (App.GameManager.PackagesDelivered == wavePackageCountGoals[wave])
         {
             //turn off spawners to turn on right ones
             disableAllSpawners();
-            App.GameManager.nextWave();
+            var packagesToDeliverForNewWave = wavePackageCountGoals[wave + 1];
+            App.GameManager.NextWave(packagesToDeliverForNewWave);
             // play sports-whistle.wav every wave start
         }
-        if(App.GameManager.CurrentWave == 1)
+        if (wave == 1)
         {
             rightSideSpawners[1].isEnabled = true;
         }
 
-        if(App.GameManager.CurrentWave == 2 || App.GameManager.CurrentWave == 5)
+        if (wave == 2 || wave == 5)
         {
-            foreach(var spawner in rightSideSpawners){
+            foreach (var spawner in rightSideSpawners)
+            {
                 spawner.isEnabled = true;
             }
         }
 
-        if (App.GameManager.CurrentWave == 3 || App.GameManager.CurrentWave == 4)
+        if (wave == 3 || wave == 4)
         {
             foreach (var spawner in leftSideSpawners)
             {
                 spawner.isEnabled = true;
-                
+
             }
         }
 
-        
-
-        if ( App.GameManager.CurrentWave == 5)
+        if (wave == 5)
         {
             foreach (var spawner in bottomSideSpawners)
             {
@@ -73,15 +74,15 @@ public class WaveController : MonoBehaviour
             }
         }
 
-        if (App.GameManager.CurrentWave > 5)
+        if (wave > 5)
         {
             foreach (var spawner in allSpawners)
             {
                 //n*10 + 50 > 50 - wave 
-                if (Random.Range((App.GameManager.CurrentWave * 10 + 50), 101) > 50 - App.GameManager.CurrentWave)
+                if (Random.Range((wave * 10 + 50), 101) > 50 - wave)
                 {
                     spawner.isEnabled = true;
-                    spawner.maxRandSpawnCount = App.GameManager.CurrentWave - 3;
+                    spawner.maxRandSpawnCount = wave - 3;
 
 
                     /*f(x) = A * (1 - e^(-B * x))
@@ -94,14 +95,14 @@ public class WaveController : MonoBehaviour
                         B is a positive constant that controls the rate of reduction = .5f
                         e is the base of the natural logarithm (approximately 2.71828)
                      */
-                    spawner.spawnRate = 30f - (25f * (1 - Mathf.Pow(2.718f, (-.5f * App.GameManager.CurrentWave))));
+                    spawner.spawnRate = 30f - (25f * (1 - Mathf.Pow(2.718f, (-.5f * wave))));
                 }
             }
         }
     }
     public void disableAllSpawners()
     {
-        foreach(var spawner in allSpawners)
+        foreach (var spawner in allSpawners)
         {
             spawner.isEnabled = false;
         }

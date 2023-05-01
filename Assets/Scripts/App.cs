@@ -4,7 +4,7 @@ using UnityEngine;
 public class App
 {
     public static GameManager GameManager { get; private set; }
-    
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Bootstrap()
     {
