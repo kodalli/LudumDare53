@@ -11,8 +11,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private InputActionAsset inputActionAsset;
-    
-    [Header("Main Menu")]
+
+    // @formatter:off
+    [Header("Main Menu")] 
     [SerializeField] private GameObject mainMenuCanvas;
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject rulesMenu;
@@ -23,66 +24,108 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button exitAppButton;
 
     [Header("Game HUD")] 
-    [SerializeField] private GameObject HUDCanvas;
+    [SerializeField] private GameObject hudCanvas;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text levelsText;
     [SerializeField] private TMP_Text dogTreatsText;
+
+    [SerializeField] private Button showMenuButton;
     [SerializeField] private Button exitGameButton;
+    
+    [Header("ExitScreen")] 
+    [SerializeField] private GameObject exitScreenCanvas;
+    [SerializeField] private Button confirmButton;
+    [SerializeField] private Button backButton;
+
+    // @formatter:on
 
     private void Awake()
     {
         inputActionAsset.Disable();
-        
+
+        Time.timeScale = 0;
+
         mainMenuCanvas.SetActive(true);
-        HUDCanvas.SetActive(false);
+        hudCanvas.SetActive(false);
+        exitScreenCanvas.SetActive(false);
     }
 
     private void OnEnable()
     {
-        startButton.onClick.AddListener(OnStart);
+        startButton.onClick.AddListener(StartGame);
         rulesButton.onClick.AddListener(OnRules);
         exitAppButton.onClick.AddListener(OnExitApplication);
+
+        showMenuButton.onClick.AddListener(ShowMenu);
+        exitGameButton.onClick.AddListener(ShowExitScreen);
         
-        exitGameButton.onClick.AddListener(OnExitGame);
+        confirmButton.onClick.AddListener(ShowMenu);
+        backButton.onClick.AddListener(StartGame);
     }
 
     private void OnDisable()
     {
-        startButton.onClick.RemoveListener(OnStart);
-        rulesButton.onClick.RemoveListener(OnStart);
+        startButton.onClick.RemoveListener(StartGame);
+        rulesButton.onClick.RemoveListener(StartGame);
         exitAppButton.onClick.RemoveListener(OnExitApplication);
+
+        showMenuButton.onClick.RemoveListener(ShowMenu);
+        exitGameButton.onClick.RemoveListener(ShowExitScreen);
+        
+        confirmButton.onClick.RemoveListener(ShowMenu);
+        backButton.onClick.RemoveListener(StartGame);
     }
 
-    private void OnStart()
+    private void Update()
+    {
+        dogTreatsText.text = $"x{App.GameManager.dogTreatsCount}";
+    }
+
+    private void StartGame()
     {
         mainMenuCanvas.SetActive(false);
-        HUDCanvas.SetActive(true);
-        inputActionAsset.Enable();
+        hudCanvas.SetActive(true);
+        exitScreenCanvas.SetActive(false);
         
+        inputActionAsset.Enable();
+
         Time.timeScale = 1;
     }
+
     private void OnRules()
     {
         mainMenu.gameObject.SetActive(!mainMenu.gameObject.activeSelf);
         rulesMenu.gameObject.SetActive(!rulesMenu.gameObject.activeSelf);
     }
-    
+
     private static void OnExitApplication()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
-    
-    private void OnExitGame()
+
+    private void ShowMenu()
     {
         mainMenuCanvas.SetActive(true);
-        HUDCanvas.SetActive(false);
+        hudCanvas.SetActive(false);
+        exitScreenCanvas.SetActive(false);
+        
         inputActionAsset.Disable();
-
+        
         Time.timeScale = 0;
     }
-
+    
+    private void ShowExitScreen()
+    {
+        mainMenuCanvas.SetActive(false);
+        hudCanvas.SetActive(false);
+        exitScreenCanvas.SetActive(true);
+        
+        inputActionAsset.Disable();
+        
+        Time.timeScale = 0;
+    }
 }
