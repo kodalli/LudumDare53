@@ -284,6 +284,7 @@ MonoBehaviour:
   visiblePackageToCarry: {fileID: 86513948662009654}
   whiteMaterial: {fileID: 2100000, guid: 862f6ee82c9e2e9c3bb6fe28aa125fce, type: 2}
   takeDamageTimer: 0.2
+  PirateGotTreasureSound: {fileID: 8300000, guid: 9a991f157e94056498dcffc1394ac29a, type: 3}
 --- !u!50 &4275102312944782040
 Rigidbody2D:
   serializedVersion: 4

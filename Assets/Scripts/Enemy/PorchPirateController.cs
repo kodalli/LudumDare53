@@ -25,6 +25,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     private NavMeshAgent m_Agent;
     private SpriteRenderer m_SpriteRenderer;
     private Material m_DefaultMaterial;
+    public AudioClip PirateGotTreasureSound;
 
     // Logic
     // Search for package
@@ -116,6 +117,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
                 Debug.Log("Package Gone!");
                 App.GameManager.PackageStolen();
                 Kill();
+                SoundManager.Instance.PlaySound(PirateGotTreasureSound);
             }
             else
             {
