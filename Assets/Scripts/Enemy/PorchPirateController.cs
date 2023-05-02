@@ -26,6 +26,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
     private SpriteRenderer m_SpriteRenderer;
     private Material m_DefaultMaterial;
     public AudioClip PirateGotTreasureSound;
+    private bool isDead = false;
 
     // Logic
     // Search for package
@@ -110,9 +111,10 @@ public class PorchPirateController : MonoBehaviour, IDamageable
         // Debug.Log("Distance to target: " + distanceToTarget);
 
         // Successfully brought back package to escape location
-        if (distanceToTarget < 1f)
+        if (distanceToTarget < 1f )
         {
-            if (m_CurrentTarget == escapeLocation)
+            
+            if (m_CurrentTarget == escapeLocation && !isDead)
             {
                 Debug.Log("Package Gone!");
                 App.GameManager.PackageStolen();
@@ -160,6 +162,7 @@ public class PorchPirateController : MonoBehaviour, IDamageable
 
     private void Kill()
     {
+        isDead = true;
         Destroy(gameObject, 0.1f);
     }
 
