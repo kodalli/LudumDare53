@@ -1138,30 +1138,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1328422882}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 167.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 133.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868357455, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
     - target: {fileID: 1946893390, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1170,96 +1146,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1328422882}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 167.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 488.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010786512154, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010798283344, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_text
-      value: 'WASD to move camera
-
-        Left Click to select troops
-
-        Right
-        Click to direct troops
-
-        Left Shift for box select (adds to current
-        selection)
-
-
-        Dog troops can pick up packages and delivery to houses
-
-        Giga
-        Dog will fight off Porch Pirates
-
-        Earn dog treats by delivering packages
-
-        Use
-        dog treats to by troops
-
-        Delivery the goal number of packages to
-        complete the wave'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010798283344, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_fontSize
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010798283344, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_fontSizeMin
-      value: 22
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010798283344, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010798283351, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 58
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 167.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 666.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106010842164704, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
     - target: {fileID: 3819106011222229384, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -1308,46 +1194,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
-    - target: {fileID: 3819106011435531367, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3819106011634646315, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1328422882}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 167.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 311.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819106011730918353, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
     - target: {fileID: 3819106012141403634, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1328422882}
-    - target: {fileID: 3819106012141403639, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09547962bcf250a47a2f735d7e9adf98, type: 3}
 --- !u!1 &1433613530
